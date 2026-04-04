@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Gestión — Los Tronquitos</title>
+  <link rel="icon" type="image/png" href="assets/images/logo2.png">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#1a1a2e; color:#f0f0f0; min-height:100vh; }
+
+    /* ── HEADER ── */
+    .header { background:linear-gradient(135deg,#16213e,#0f3460); padding:16px 24px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 12px rgba(0,0,0,.4); }
+    .header h1 { color:#d4a574; font-size:22px; }
+    .header p  { color:#888; font-size:13px; margin-top:2px; }
+
+    /* ── LAYOUT ── */
+    .container { max-width:1300px; margin:0 auto; padding:24px; }
+
+    /* ── SEDE SELECTOR ── */
+    .sede-bar { display:flex; align-items:center; gap:16px; background:#16213e; padding:14px 20px; border-radius:10px; margin-bottom:24px; }
+    .sede-bar label { color:#d4a574; font-weight:600; font-size:15px; }
+    .sede-bar select { padding:8px 16px; border-radius:6px; border:1px solid #d4a574; background:#1a1a2e; color:#f0f0f0; font-size:15px; cursor:pointer; }
+    .sede-bar .schedule-info { margin-left:auto; color:#aaa; font-size:13px; }
+    .sede-bar .schedule-info span { color:#d4a574; font-weight:600; }
+
+    /* ── STAT CARDS ── */
+    .stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:24px; }
+    .stat-card { background:#16213e; border-radius:10px; padding:20px; text-align:center; border:1px solid #2a2a4e; }
+    .stat-num  { font-size:36px; font-weight:700; color:#d4a574; }
+    .stat-lbl  { font-size:12px; color:#888; text-transform:uppercase; letter-spacing:.5px; margin-top:4px; }
+
+    /* ── CALENDAR ── */
+    .section { background:#16213e; border-radius:10px; padding:24px; margin-bottom:24px; border:1px solid #2a2a4e; }
+    .section h2 { color:#d4a574; font-size:18px; margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+
+    .cal-nav { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+    .cal-nav button { background:#0f3460; color:#f0f0f0; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-size:16px; transition:.2s; }
+    .cal-nav button:hover { background:#d4a574; color:#1a1a2e; }
+    .cal-nav .month-title { font-size:18px; font-weight:600; color:#f0f0f0; min-width:160px; text-align:center; }
+
+    .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; }
+    .cal-day-name { text-align:center; font-size:12px; color:#888; font-weight:600; padding:6px 0; text-transform:uppercase; }
+    .cal-day { border-radius:8px; padding:10px 8px; cursor:pointer; transition:.2s; border:2px solid transparent; min-height:72px; display:flex; flex-direction:column; }
+    .cal-day:hover { border-color:#d4a574; }
+    .cal-day.selected { border-color:#d4a574 !important; background:#2a2a4e !important; }
+    .cal-day.empty { cursor:default; }
+    .cal-day.today .date-num { font-weight:900; text-decoration:underline; }
+    .cal-day.past { opacity:.45; cursor:default; pointer-events:none; }
+
+    .cal-day.available  { background:#0d3a23; }
+    .cal-day.warning    { background:#3d2e00; }
+    .cal-day.full       { background:#3d0d0d; }
+    .cal-day.blocked    { background:#2a1a3e; border-color:#6b3fa0; }
+
+    .date-num  { font-size:15px; font-weight:700; color:#f0f0f0; }
+    .cap-bar   { margin-top:6px; height:5px; border-radius:3px; background:#333; overflow:hidden; }
+    .cap-fill  { height:100%; border-radius:3px; transition:.3s; }
+    .cap-label { font-size:11px; color:#aaa; margin-top:4px; }
+
+    /* ── DAY DETAIL PANEL ── */
+    .panel { background:#1a1a2e; border-radius:10px; padding:24px; border:1px solid #2a2a4e; }
+    .panel h2 { color:#d4a574; font-size:17px; margin-bottom:16px; }
+    .panel-meta { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
+    .panel-meta .meta-item { background:#16213e; padding:10px 16px; border-radius:8px; text-align:center; }
+    .panel-meta .meta-num  { font-size:24px; font-weight:700; color:#d4a574; }
+    .panel-meta .meta-lbl  { font-size:11px; color:#888; text-transform:uppercase; }
+
+    .day-actions { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+    .btn { padding:9px 18px; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; transition:.2s; }
+    .btn-primary   { background:#d4a574; color:#1a1a2e; }
+    .btn-primary:hover { background:#c89460; }
+    .btn-danger    { background:#c0392b; color:#fff; }
+    .btn-danger:hover  { background:#a93226; }
+    .btn-success   { background:#1e8449; color:#fff; }
+    .btn-success:hover { background:#196f3d; }
+    .btn-secondary { background:#0f3460; color:#f0f0f0; }
+    .btn-secondary:hover { background:#1a4a80; }
+
+    /* ── RESERVATION TABLE ── */
+    table { width:100%; border-collapse:collapse; margin-top:8px; }
+    th { background:#0f3460; padding:10px 12px; text-align:left; color:#d4a574; font-size:13px; }
+    td { padding:10px 12px; border-bottom:1px solid #2a2a4e; font-size:13px; color:#ddd; }
+    tr:hover td { background:#1d2a45; }
+    .badge { display:inline-block; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700; }
+    .badge-confirmed { background:#1e8449; color:#fff; }
+    .badge-special   { background:#7d3c98; color:#fff; }
+
+    /* ── INLINE EDIT ── */
+    .form-row { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; margin-bottom:12px; }
+    .form-row label { font-size:13px; color:#aaa; display:block; margin-bottom:4px; }
+    .form-row input, .form-row select {
+      padding:8px 12px; border-radius:6px; border:1px solid #444;
+      background:#1a1a2e; color:#f0f0f0; font-size:13px;
+    }
+    .form-row input:focus, .form-row select:focus { border-color:#d4a574; outline:none; }
+
+    /* ── GLOBAL RESERVATIONS ── */
+    .filter-bar { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+    .filter-bar input, .filter-bar select { padding:8px 12px; border-radius:6px; border:1px solid #444; background:#1a1a2e; color:#f0f0f0; font-size:13px; }
+    .filter-bar input:focus, .filter-bar select:focus { border-color:#d4a574; outline:none; }
+
+    /* ── MESSAGES ── */
+    .msg { padding:12px 16px; border-radius:6px; margin-bottom:12px; font-size:14px; display:none; }
+    .msg.success { background:#1e4d2b; color:#82e0aa; }
+    .msg.error   { background:#4d1e1e; color:#e07882; }
+
+    /* ── MODAL ── */
+    .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:1000; }
+    .modal   { background:#16213e; border-radius:12px; padding:28px; max-width:460px; width:92%; margin:12% auto; border:1px solid #2a2a4e; }
+    .modal h3 { color:#d4a574; margin-bottom:16px; }
+    .modal .form-row { flex-direction:column; }
+    .modal input, .modal select, .modal textarea { width:100%; padding:9px 12px; border-radius:6px; border:1px solid #444; background:#1a1a2e; color:#f0f0f0; font-size:13px; margin-bottom:12px; }
+    .modal textarea { min-height:70px; resize:vertical; }
+    .modal-actions { display:flex; gap:10px; justify-content:flex-end; }
+    .close-btn { float:right; background:none; border:none; color:#aaa; font-size:22px; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>🍽️ Panel de Gestión — Los Tronquitos</h1>
+    <p>Administración de Reservas y Capacidad</p>
+  </div>
+  <a href="/" style="color:#d4a574;text-decoration:none;font-size:13px;">← Volver al sitio</a>
+</div>
+
+<div class="container">
+
+  <!-- SEDE SELECTOR -->
+  <div class="sede-bar">
+    <label for="sedeSelect">📍 Sede:</label>
+    <select id="sedeSelect" onchange="onSedeChange()">
+      <option value="Principal">Principal</option>
+      <option value="Terraza">Terraza</option>
+      <option value="Restrepo">Restrepo</option>
+      <option value="Nieves">Nieves</option>
+      <option value="7ma con 22">7ma con 22</option>
+      <option value="Av Rojas">Av Rojas</option>
+    </select>
+    <div class="schedule-info" id="scheduleInfo">Horario: <span>cargando...</span></div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num" id="statConfirmed">—</div><div class="stat-lbl">Reservas Activas</div></div>
+    <div class="stat-card"><div class="stat-num" id="statToday">—</div><div class="stat-lbl">Personas Hoy</div></div>
+    <div class="stat-card"><div class="stat-num" id="statAvailToday">—</div><div class="stat-lbl">Cupos Hoy</div></div>
+    <div class="stat-card"><div class="stat-num" id="statSpecial">—</div><div class="stat-lbl">Grupos Especiales</div></div>
+  </div>
+
+  <!-- CALENDARIO -->
+  <div class="section">
+    <h2>📅 Vista Calendario</h2>
+    <div class="cal-nav">
+      <button onclick="prevMonth()">‹</button>
+      <div class="month-title" id="monthTitle">—</div>
+      <button onclick="nextMonth()">›</button>
+    </div>
+    <div class="calendar-grid" id="calDayNames"></div>
+    <div class="calendar-grid" id="calGrid" style="margin-top:6px;"></div>
+  </div>
+
+  <!-- DETALLE DEL DÍA SELECCIONADO -->
+  <div class="panel" id="dayPanel" style="display:none;margin-bottom:24px;">
+    <h2 id="dayPanelTitle">Detalle del Día</h2>
+    <div class="panel-meta" id="dayMeta"></div>
+
+    <div class="day-actions">
+      <button class="btn btn-secondary" onclick="openCapacityModal()">✏️ Cambiar Capacidad</button>
+      <button class="btn btn-danger"    id="blockBtn" onclick="toggleBlock()">🔒 Bloquear Día</button>
+      <button class="btn btn-success"   onclick="refreshDay()">🔄 Actualizar</button>
+    </div>
+
+    <div id="dayMsg" class="msg"></div>
+
+    <table id="dayTable">
+      <thead><tr><th>ID</th><th>Nombre</th><th>Teléfono</th><th>Personas</th><th>Hora</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody id="dayBody"></tbody>
+    </table>
+    <p id="dayEmpty" style="color:#888;font-size:14px;display:none;">No hay reservas para este día.</p>
+  </div>
+
+  <!-- TODAS LAS RESERVAS -->
+  <div class="section">
+    <h2>📋 Todas las Reservas Activas</h2>
+    <div class="filter-bar">
+      <input type="text"   id="searchInput" placeholder="🔎 Nombre, teléfono o ID..." oninput="filterReservations()">
+      <input type="date"   id="filterDate"  onchange="filterReservations()">
+      <select id="filterSede" onchange="filterReservations()">
+        <option value="">Todas las sedes</option>
+        <option value="Centro">Centro</option>
+        <option value="Usaquén">Usaquén</option>
+        <option value="Chapinero">Chapinero</option>
+      </select>
+      <button class="btn btn-primary" onclick="loadAllReservations()">Actualizar</button>
+    </div>
+    <div id="globalMsg" class="msg"></div>
+    <table id="globalTable">
+      <thead><tr><th>ID</th><th>Nombre</th><th>Teléfono</th><th>Personas</th><th>Fecha</th><th>Hora</th><th>Sede</th><th>Mesa</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody id="globalBody"></tbody>
+    </table>
+    <p id="globalEmpty" style="color:#888;font-size:14px;display:none;margin-top:12px;">No hay reservas.</p>
+  </div>
+
+</div><!-- /container -->
+
+<!-- MODAL: CAMBIAR CAPACIDAD -->
+<div class="overlay" id="capOverlay">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal('capOverlay')">×</button>
+    <h3>✏️ Cambiar Capacidad del Día</h3>
+    <p style="color:#aaa;font-size:13px;margin-bottom:16px;" id="capModalDate"></p>
+    <label style="color:#aaa;font-size:13px;">Nuevo límite de personas</label>
+    <input type="number" id="capInput" min="1" max="500" placeholder="Ej: 60">
+    <label style="color:#aaa;font-size:13px;">Nota (opcional)</label>
+    <textarea id="capNote" placeholder="Ej: Evento privado, reducción por obras..."></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('capOverlay')">Cancelar</button>
+      <button class="btn btn-primary"   onclick="saveCapacity()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CONFIRMAR ELIMINAR -->
+<div class="overlay" id="delOverlay">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal('delOverlay')">×</button>
+    <h3>⚠️ Eliminar Reserva</h3>
+    <p style="color:#aaa;font-size:14px;margin-bottom:20px;" id="delDetails"></p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('delOverlay')">Cancelar</button>
+      <button class="btn btn-danger"    onclick="confirmDelete()">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const BACKEND = 'http://localhost:5000';
+const MONTHS_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DAYS_ES   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+let currentYear  = new Date().getFullYear();
+let currentMonth = new Date().getMonth() + 1;  // 1-based
+let selectedDate = null;
+let selectedDayData = null;
+let allReservations  = [];
+let calData          = [];
+let pendingDeleteId  = null;
+let isBlocked        = false;
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildDayNames();
+  onSedeChange();
+  loadAllReservations();
+  setInterval(loadAllReservations, 30000);
+});
+
+function getSede() { return document.getElementById('sedeSelect').value; }
+
+async function onSedeChange() {
+  // Cargar horario de la sede
+  try {
+    const r = await fetch(`${BACKEND}/api/schedule?sede=${encodeURIComponent(getSede())}`);
+    const d = await r.json();
+    if (d.status === 'success') {
+      const sd = d.data;
+      document.getElementById('scheduleInfo').innerHTML =
+        `Horario: <span>${sd.open_time} – ${sd.close_time}</span> &nbsp;|&nbsp; Capacidad por defecto: <span>${sd.default_capacity}</span>`;
+    }
+  } catch(e) {}
+
+  loadCalendar();
+  loadStats();
+  if (selectedDate) loadDayDetail(selectedDate);
+}
+
+// ─────────────────────────────────────────
+// CALENDAR
+// ─────────────────────────────────────────
+function buildDayNames() {
+  const grid = document.getElementById('calDayNames');
+  grid.innerHTML = '';
+  DAYS_ES.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-day-name';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+}
+
+async function loadCalendar() {
+  const sede = getSede();
+  document.getElementById('monthTitle').textContent = `${MONTHS_ES[currentMonth-1]} ${currentYear}`;
+  try {
+    const r = await fetch(`${BACKEND}/api/calendar?sede=${encodeURIComponent(sede)}&year=${currentYear}&month=${currentMonth}`);
+    const d = await r.json();
+    if (d.status === 'success') {
+      calData = d.data.days;
+      renderCalendar(calData);
+    }
+  } catch(e) { console.error('Calendar error', e); }
+}
+
+function renderCalendar(days) {
+  const grid    = document.getElementById('calGrid');
+  const today   = new Date().toISOString().split('T')[0];
+  grid.innerHTML = '';
+
+  // Blank cells for day-of-week offset
+  const firstDow = new Date(currentYear, currentMonth-1, 1).getDay(); // 0=Sun
+  for (let i = 0; i < firstDow; i++) {
+    const blank = document.createElement('div');
+    blank.className = 'cal-day empty';
+    grid.appendChild(blank);
+  }
+
+  days.forEach(day => {
+    const el  = document.createElement('div');
+    const pct = day.capacity > 0 ? day.reserved / day.capacity : 0;
+
+    el.className = 'cal-day ' + (
+      day.blocked    ? 'blocked'   :
+      pct >= 1       ? 'full'      :
+      pct >= 0.7     ? 'warning'   : 'available'
+    );
+    if (day.date === today)    el.classList.add('today');
+    if (day.date <  today)    el.classList.add('past');
+    if (day.date === selectedDate) el.classList.add('selected');
+
+    const fillColor = day.blocked ? '#6b3fa0' : pct>=1 ? '#c0392b' : pct>=0.7 ? '#d4ac0d' : '#27ae60';
+
+    el.innerHTML = `
+      <div class="date-num">${new Date(day.date+'T12:00').getDate()}</div>
+      ${day.blocked
+        ? `<div class="cap-label" style="color:#c39bd3;">🔒 Bloqueado</div>`
+        : `<div class="cap-bar"><div class="cap-fill" style="width:${Math.min(pct*100,100).toFixed(0)}%;background:${fillColor}"></div></div>
+           <div class="cap-label">${day.reserved}/${day.capacity}</div>`}
+    `;
+    if (!day.date.startsWith('past')) {
+      el.onclick = () => selectDay(day.date);
+    }
+    grid.appendChild(el);
+  });
+}
+
+function selectDay(date) {
+  selectedDate = date;
+  // Update selected highlight
+  document.querySelectorAll('.cal-day').forEach(el => el.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  loadDayDetail(date);
+}
+
+function prevMonth() {
+  currentMonth--;
+  if (currentMonth < 1) { currentMonth = 12; currentYear--; }
+  loadCalendar();
+}
+function nextMonth() {
+  currentMonth++;
+  if (currentMonth > 12) { currentMonth = 1; currentYear++; }
+  loadCalendar();
+}
+
+// ─────────────────────────────────────────
+// DAY DETAIL
+// ─────────────────────────────────────────
+async function loadDayDetail(date) {
+  const panel = document.getElementById('dayPanel');
+  panel.style.display = 'block';
+
+  try {
+    const r = await fetch(`${BACKEND}/api/availability?sede=${encodeURIComponent(getSede())}&fecha=${date}`);
+    const d = await r.json();
+    if (d.status !== 'success') return;
+    selectedDayData = d.data;
+
+    const dateDisplay = new Date(date+'T12:00').toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    document.getElementById('dayPanelTitle').textContent = `📅 ${dateDisplay}`;
+
+    isBlocked = d.data.blocked;
+    document.getElementById('blockBtn').textContent = isBlocked ? '🔓 Desbloquear Día' : '🔒 Bloquear Día';
+    document.getElementById('blockBtn').className = isBlocked ? 'btn btn-success' : 'btn btn-danger';
+
+    const pct = d.data.capacity > 0 ? (d.data.reserved/d.data.capacity*100).toFixed(0) : 0;
+    document.getElementById('dayMeta').innerHTML = `
+      <div class="meta-item"><div class="meta-num">${d.data.capacity}</div><div class="meta-lbl">Capacidad</div></div>
+      <div class="meta-item"><div class="meta-num">${d.data.reserved}</div><div class="meta-lbl">Reservadas</div></div>
+      <div class="meta-item"><div class="meta-num" style="color:${d.data.available>0?'#27ae60':'#c0392b'}">${d.data.available}</div><div class="meta-lbl">Disponibles</div></div>
+      <div class="meta-item"><div class="meta-num" style="color:#d4a574">${pct}%</div><div class="meta-lbl">Ocupación</div></div>
+    `;
+
+    const reservations = d.data.reservations || [];
+    const tbody = document.getElementById('dayBody');
+    tbody.innerHTML = '';
+    document.getElementById('dayEmpty').style.display = reservations.length ? 'none' : 'block';
+
+    reservations.forEach(res => {
+      const isSpecial = res.is_special_group == 1 || res.personas > 30;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>#${res.id}</td>
+        <td>${res.nombre}</td>
+        <td>${res.telefono}</td>
+        <td>${res.personas}</td>
+        <td>${res.hora}</td>
+        <td><span class="badge ${isSpecial?'badge-special':'badge-confirmed'}">${isSpecial?'Especial':'Confirmada'}</span></td>
+        <td>
+          <button class="btn btn-danger" style="padding:5px 10px;font-size:12px;" onclick="openDelete(${res.id},'${esc(res.nombre)}',${res.personas})">Eliminar</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch(e) { console.error('DayDetail error', e); }
+}
+
+async function refreshDay() { if (selectedDate) { await loadDayDetail(selectedDate); await loadCalendar(); } }
+
+// ─────────────────────────────────────────
+// CAPACITY MODAL
+// ─────────────────────────────────────────
+function openCapacityModal() {
+  if (!selectedDate) { alert('Seleccione un día del calendario primero.'); return; }
+  document.getElementById('capModalDate').textContent =
+    `Sede: ${getSede()} — Fecha: ${selectedDate}`;
+  document.getElementById('capInput').value = selectedDayData ? selectedDayData.capacity : 50;
+  document.getElementById('capNote').value  = '';
+  document.getElementById('capOverlay').style.display = 'block';
+}
+
+async function saveCapacity() {
+  const cap  = parseInt(document.getElementById('capInput').value);
+  const note = document.getElementById('capNote').value.trim();
+  if (!cap || cap < 1) { alert('Ingrese una capacidad válida'); return; }
+
+  try {
+    const r = await fetch(`${BACKEND}/api/capacity`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ sede: getSede(), date: selectedDate, capacity: cap, note })
+    });
+    const d = await r.json();
+    closeModal('capOverlay');
+    showMsg('dayMsg', d.status === 'success' ? '✅ Capacidad actualizada' : '❌ ' + d.message, d.status);
+    await refreshDay(); await loadCalendar();
+  } catch(e) { showMsg('dayMsg', '❌ Error de conexión', 'error'); }
+}
+
+// ─────────────────────────────────────────
+// BLOCK / UNBLOCK
+// ─────────────────────────────────────────
+async function toggleBlock() {
+  if (!selectedDate) return;
+  const block = !isBlocked;
+  const note  = block ? (prompt('Motivo del bloqueo (opcional):') || 'Día bloqueado') : '';
+  try {
+    const r = await fetch(`${BACKEND}/api/block-day`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ sede: getSede(), date: selectedDate, block, note })
+    });
+    const d = await r.json();
+    showMsg('dayMsg', d.status === 'success' ? `✅ ${d.message}` : '❌ ' + d.message, d.status);
+    await refreshDay(); await loadCalendar();
+  } catch(e) { showMsg('dayMsg', '❌ Error de conexión', 'error'); }
+}
+
+// ─────────────────────────────────────────
+// DELETE RESERVATION
+// ─────────────────────────────────────────
+function openDelete(id, nombre, personas) {
+  pendingDeleteId = id;
+  document.getElementById('delDetails').textContent =
+    `¿Eliminar la reserva #${id} de ${nombre} (${personas} personas)? Esta acción no se puede deshacer.`;
+  document.getElementById('delOverlay').style.display = 'block';
+}
+
+async function confirmDelete() {
+  if (!pendingDeleteId) return;
+  try {
+    const r = await fetch(`${BACKEND}/api/delete-reservation`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ reservation_id: pendingDeleteId })
+    });
+    const d = await r.json();
+    closeModal('delOverlay');
+    const ok = d.status === 'success';
+    showMsg('dayMsg', ok ? '✅ Reserva eliminada' : '❌ ' + d.message, ok ? 'success' : 'error');
+    showMsg('globalMsg', ok ? '✅ Reserva eliminada' : '❌ ' + d.message, ok ? 'success' : 'error');
+    if (ok) { await refreshDay(); await loadCalendar(); await loadAllReservations(); await loadStats(); }
+  } catch(e) { showMsg('dayMsg', '❌ Error de conexión', 'error'); }
+}
+
+// ─────────────────────────────────────────
+// ALL RESERVATIONS
+// ─────────────────────────────────────────
+async function loadAllReservations() {
+  try {
+    const r = await fetch(`${BACKEND}/api/reservations`);
+    const d = await r.json();
+    if (d.status === 'success') {
+      allReservations = d.data || [];
+      filterReservations();
+    }
+  } catch(e) {}
+}
+
+function filterReservations() {
+  const search = document.getElementById('searchInput').value.trim().toLowerCase();
+  const date   = document.getElementById('filterDate').value;
+  const sede   = document.getElementById('filterSede').value;
+
+  let list = allReservations;
+  if (search) list = list.filter(r =>
+    (r.nombre||'').toLowerCase().includes(search) ||
+    (r.telefono||'').includes(search) ||
+    String(r.id) === search
+  );
+  if (date)  list = list.filter(r => r.fecha === date);
+  if (sede)  list = list.filter(r => r.sede  === sede);
+
+  const tbody = document.getElementById('globalBody');
+  tbody.innerHTML = '';
+  document.getElementById('globalEmpty').style.display = list.length ? 'none' : 'block';
+
+  list.forEach(res => {
+    const isSpecial = res.is_special_group == 1 || res.personas > 30;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>#${res.id}</td>
+      <td>${res.nombre}</td>
+      <td>${res.telefono}</td>
+      <td>${res.personas}</td>
+      <td>${res.fecha}</td>
+      <td>${res.hora}</td>
+      <td>${res.sede||'—'}</td>
+      <td>${res.table_number ? 'Mesa '+res.table_number : (isSpecial ? '✨ Especial' : '—')}</td>
+      <td><span class="badge ${isSpecial?'badge-special':'badge-confirmed'}">${isSpecial?'Especial':'Confirmada'}</span></td>
+      <td>
+        <button class="btn btn-danger" style="padding:5px 10px;font-size:12px;"
+          onclick="openDelete(${res.id},'${esc(res.nombre)}',${res.personas})">Eliminar</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ─────────────────────────────────────────
+// STATS
+// ─────────────────────────────────────────
+async function loadStats() {
+  const sede  = getSede();
+  const today = new Date().toISOString().split('T')[0];
+  try {
+    const [rAll, rToday] = await Promise.all([
+      fetch(`${BACKEND}/api/reservations`).then(r=>r.json()),
+      fetch(`${BACKEND}/api/availability?sede=${encodeURIComponent(sede)}&fecha=${today}`).then(r=>r.json())
+    ]);
+
+    if (rAll.status === 'success') {
+      const list    = rAll.data || [];
+      const special = list.filter(r => r.is_special_group==1 || r.personas>30);
+      document.getElementById('statConfirmed').textContent = list.length;
+      document.getElementById('statSpecial').textContent   = special.length;
+    }
+    if (rToday.status === 'success') {
+      document.getElementById('statToday').textContent     = rToday.data.reserved;
+      document.getElementById('statAvailToday').textContent= rToday.data.available;
+    }
+  } catch(e) {}
+}
+
+// ─────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────
+function showMsg(id, msg, type) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'msg ' + (type === 'success' ? 'success' : 'error');
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 5000);
+}
+
+function closeModal(id) {
+  document.getElementById(id).style.display = 'none';
+  pendingDeleteId = null;
+}
+
+function esc(str) { return (str||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+
+// Close overlays on background click
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
+});
+</script>
+</body>
+</html>

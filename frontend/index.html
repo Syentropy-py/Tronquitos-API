@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asadero Los Tronquitos | Carne a la Llanera desde 1971 — Bogotá</title>
+  <meta name="description" content="Asadero Los Tronquitos: más de 53 años de tradición en carne a la llanera en Bogotá. 3 sedes, eventos y el mejor sabor de la parrilla colombiana. Desde 1971.">
+  <meta property="og:title" content="Asadero Los Tronquitos — Asadero Gourmet desde 1971">
+  <meta property="og:description" content="Más de 53 años ofreciendo el mejor sabor en carne a la llanera, chigüiro, costilla y ternera en Bogotá.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="assets/images/logo2.png">
+</head>
+<body>
+
+<!-- ════════ HEADER ════════ -->
+<header class="header" id="header">
+  <div class="header__inner">
+    <a href="#inicio" class="header__logo"><img src="assets/images/logo-larg.png" alt="Los Tronquitos - Asadero Gourmet desde 1971"></a>
+    <nav class="nav" aria-label="Navegación principal">
+      <ul class="nav__list">
+        <li><a href="#inicio" class="nav__link nav__link--active">Inicio</a></li>
+        <li><a href="nosotros.html" class="nav__link">Nosotros</a></li>
+        <li><a href="menu.pdf" class="nav__link">Menú</a></li>
+        <li><a href="galeria.html" class="nav__link">Galería</a></li>
+        <li><a href="#contacto" class="nav__link">Contacto</a></li>
+        <li><a href="#reservaciones" class="nav__cta btn btn--primary">Reservar Ahora</a></li>
+      </ul>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú"><span class="hamburger__line"></span><span class="hamburger__line"></span><span class="hamburger__line"></span></button>
+  </div>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <ul class="mobile-menu__list">
+    <li><a href="#inicio" class="mobile-menu__link">Inicio</a></li>
+    <li><a href="nosotros.html" class="mobile-menu__link">Nosotros</a></li>
+    <li><a href="menu_dummy.pdf" class="mobile-menu__link">Menú</a></li>
+    <li><a href="galeria.html" class="mobile-menu__link">Galería</a></li>
+    <li><a href="#contacto" class="mobile-menu__link">Contacto</a></li>
+  </ul>
+</div>
+
+<!-- ════════ HERO ════════ -->
+<section class="hero" id="inicio">
+  <div class="hero__carousel">
+    <div class="hero__slide hero__slide--active"><img src="assets/images/new/churrasco1.jpeg" alt="Carne a la llanera en parrilla tradicional"></div>
+    <div class="hero__slide"><img src="assets/images/new/Chunchullo (19).JPG"Parrillada mixta Los Tronquitos"></div>
+    <div class="hero__slide"><img src="assets/images/new/coctel1.JPG" alt="Interior del restaurante Los Tronquitos"></div>
+  </div>
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <h1 class="hero__title">55 Años Asando Tradición<span></span></h1>
+    <p class="hero__subtitle">Carne a la llanera, chigüiro, costilla y ternera — el asadero gourmet de mayor tradición en Bogotá</p>
+    <div class="hero__buttons">
+      <a href="menu.pdf" class="btn btn--primary">Ver Menú</a>
+      <a href="#reservaciones" class="btn btn--secondary">Reservar Ahora</a>
+    </div>
+  </div>
+  <div class="hero__dots">
+    <button class="hero__dot hero__dot--active" data-slide="0" aria-label="Slide 1"></button>
+    <button class="hero__dot" data-slide="1" aria-label="Slide 2"></button>
+    <button class="hero__dot" data-slide="2" aria-label="Slide 3"></button>
+  </div>
+</section>
+
+<!-- ════════ TESTIMONIOS ════════ -->
+<section class="section section--dark testimonials" id="testimonios">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-header__title" style="color:var(--color-cream)">Lo Que Dicen Nuestros Clientes</h2>
+      <div class="section-header__divider"></div>
+    </div>
+    <div class="testimonials__slider">
+      <div class="testimonials__track" id="testimonialsTrack">
+        <div class="testimonials__slide">
+          <div class="testimonials__stars">★★★★★</div>
+          <p class="testimonials__quote">Me encantó, probé mi arepa favorita, los meseros súper atentos, ordené un asado mixto y una limonada, sabor único de asada. ¡Volveré sin duda!</p>
+          <p class="testimonials__author">Santiago AD</p><p class="testimonials__role">Reseña de Google Maps</p>
+        </div>
+        <div class="testimonials__slide">
+          <div class="testimonials__stars">★★★★★</div>
+          <p class="testimonials__quote">Excelente servicio y atención!!! La comida buena. El lugar muy agradable y tranquilo, recomendable para venir con familia y amigos.</p>
+          <p class="testimonials__author">Luis Fernando Pérez</p><p class="testimonials__role">Reseña de Google Maps</p>
+        </div>
+        <div class="testimonials__slide">
+          <div class="testimonials__stars">★★★★★</div>
+          <p class="testimonials__quote">Excelente servicio, el mesero Samuel muy amable y buena persona. La comida muy rica, a tiempo, precios buenos acordes a la porción. Las instalaciones muy bonitas y la música muy agradable.</p>
+          <p class="testimonials__author">Luis Rodríguez</p><p class="testimonials__role">Reseña de Google Maps</p>
+        </div>
+        <div class="testimonials__slide">
+          <div class="testimonials__stars">★★★★★</div>
+          <p class="testimonials__quote">Excelente servicio, me encantó la atención al cliente que maneja el restaurante, muy respetuosos y amables sus trabajadores. Sus platos son exquisitos y sus instalaciones son preciosas.</p>
+          <p class="testimonials__author">Brandon Ardila</p><p class="testimonials__role">Reseña de Google Maps</p>
+        </div>
+        <div class="testimonials__slide">
+          <div class="testimonials__stars">★★★★★</div>
+          <p class="testimonials__quote">La comida es deliciosa, fresca, las porciones son justas, servicio amable. Lo que más me agradó fue el ambiente, un espacio muy agradable.</p>
+          <p class="testimonials__author">Jennifer Tijaro</p><p class="testimonials__role">Reseña de Google Maps</p>
+        </div>
+        <div class="testimonials__slide">
+          <div class="testimonials__stars">★★★★★</div>
+          <p class="testimonials__quote">La comida estuvo genial. Carolina nos atendió muy bien. Adicionalmente, todos los platos llegaron muy rápido.</p>
+          <p class="testimonials__author">Pablo Ochoa</p><p class="testimonials__role">Reseña de Google Maps</p>
+        </div>
+      </div>
+    </div>
+    <div class="testimonials__dots" id="testimonialsDots"></div>
+  </div>
+</section>
+
+<!-- ════════ RESERVACIONES ════════ -->
+<section class="section reservations" id="reservaciones">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-header__title">Reserve su Mesa o Evento</h2>
+      <div class="section-header__divider"></div>
+    </div>
+    <div class="reservations__grid">
+      <div class="reservations__info animate-on-scroll">
+        <h3 class="reservations__info-title">Atendemos Todo Tipo de Eventos</h3>
+        <p class="reservations__info-text">Almuerzos, eventos empresariales, quinceaños, matrimonios, eventos campestres. Suministramos grupos musicales de todos los géneros, decoración, menaje y en general todo lo que su evento necesite de manera integral.</p>
+        <div class="reservations__features">
+          <div class="reservations__feature"><div class="reservations__feature-icon">🏠</div><div><p class="reservations__feature-title">6 Sedes Disponibles</p><p class="reservations__feature-text">Espacios amplios y acogedores de la tradición de Los Tronquitos</p></div></div>
+          <div class="reservations__feature"><div class="reservations__feature-icon">🎵</div><div><p class="reservations__feature-title">Música en Vivo</p><p class="reservations__feature-text">Grupos musicales de todos los géneros para amenizar su evento</p></div></div>
+          <div class="reservations__feature"><div class="reservations__feature-icon">🍽️</div><div><p class="reservations__feature-title">Servicio Integral</p><p class="reservations__feature-text">Decoración, menaje y catering completo en el lugar que usted escoja</p></div></div>
+          <div class="reservations__feature"><div class="reservations__feature-icon">📍</div><div><p class="reservations__feature-title">En Su Ubicación</p><p class="reservations__feature-text">Realizamos su evento en el lugar escogido por usted</p></div></div>
+        </div>
+      </div>
+      <div class="reservations__form-wrapper animate-on-scroll animate-on-scroll--delay-2">
+        <form id="reservationForm" novalidate>
+          <div class="form__row">
+            <div class="form__group"><label class="form__label" for="resName">Nombre completo *</label><input class="form__input" type="text" id="resName" name="Nombre" required><span class="form__error" id="resNameError">Por favor ingrese su nombre</span></div>
+            <div class="form__group"><label class="form__label" for="resPhone">Teléfono *</label><input class="form__input" type="tel" id="resPhone" name="Teléfono" required><span class="form__error" id="resPhoneError">Ingrese un teléfono válido</span></div>
+          </div>
+          <div class="form__row">
+            <div class="form__group"><label class="form__label" for="resSede">Sede *</label><select class="form__select" id="resSede" name="Sede" required><option value="">Seleccionar sede</option><option value="Principal">Principal</option><option value="Terraza">Terraza</option><option value="Restrepo">Restrepo</option><option value="Nieves">Nieves</option><option value="7ma con 22">7ma con 22</option><option value="Av Rojas">Av Rojas</option></select><span class="form__error" id="resSedeError">Seleccione una sede</span></div>
+            <div class="form__group"><label class="form__label" for="resEmail">Email</label><input class="form__input" type="email" id="resEmail" name="Email"><span class="form__error" id="resEmailError">Ingrese un email válido</span></div>
+          </div>
+          <div class="form__row">
+            <div class="form__group"><label class="form__label" for="resDate">Fecha *</label><input class="form__input" type="date" id="resDate" name="Fecha" required><span class="form__error" id="resDateError">Seleccione una fecha futura</span></div>
+            <div class="form__group">
+              <label class="form__label" for="resTime">Hora *</label>
+              <select class="form__select" id="resTime" name="Hora" required>
+                <option value="">— Seleccione sede y fecha primero —</option>
+              </select>
+              <span class="form__error" id="resTimeError">Seleccione un horario</span>
+            </div>
+          </div>
+          <!-- Indicador de cupos disponibles -->
+          <div id="availabilityBanner" style="display:none;margin-bottom:12px;padding:10px 14px;border-radius:6px;font-size:14px;font-weight:600;"></div>
+          <div class="form__row">
+            <div class="form__group"><label class="form__label" for="resGuests">Número de personas *</label>
+              <select class="form__select" id="resGuests" name="Personas" required>
+                <option value="">Seleccionar</option>
+                <option value="1">1 persona</option>
+                <option value="2">2 personas</option>
+                <option value="3">3 personas</option>
+                <option value="4">4 personas</option>
+                <option value="5">5 personas</option>
+                <option value="6">6 personas</option>
+                <option value="7">7 personas</option>
+                <option value="8">8 personas</option>
+                <option value="10">10 personas</option>
+                <option value="12">12 personas</option>
+                <option value="15">15 personas</option>
+                <option value="20">20 personas</option>
+                <option value="25">25 personas</option>
+                <option value="30">30 personas</option>
+                <option value="40">40+ personas (evento especial)</option>
+              </select>
+              <span class="form__error" id="resGuestsError">Seleccione número de personas</span>
+            </div>
+          </div>
+          <div class="form__row">
+            <div class="form__group form__group--full"><label class="form__label" for="resMessage">Mensaje o detalles del evento</label><textarea class="form__textarea" id="resMessage" name="Mensaje" rows="4" placeholder="Cuéntenos sobre su evento, número de invitados, tipo de celebración..."></textarea></div>
+          </div>
+          <button type="submit" class="btn btn--primary form__submit" id="resSubmitBtn">Enviar Reservación</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CONTACTO & UBICACIONES ════════ -->
+<section class="section contact" id="contacto">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-header__title">Nuestras Sedes</h2>
+      <div class="section-header__divider"></div>
+      <p class="section-header__description">Visítanos en cualquiera de nuestras 3 sedes en Bogotá. Atendemos de domingo a domingo.</p>
+    </div>
+    <div class="contact__grid">
+      <!-- Sede 1 Principal -->
+      <div class="contact__card animate-on-scroll" data-sede="principal">
+        <div class="contact__card-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.807!2d-74.1127!3d4.6172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f99a1c1c1c1c1%3A0x1!2sAv%20Calle%203%2053-07!5e0!3m2!1ses!2sco!4v1700000000000" allowfullscreen="" loading="lazy" title="Sede Principal Los Tronquitos"></iframe></div>
+        <div class="contact__card-info">
+          <h4 class="contact__card-name">Sede Principal</h4>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="sede-direccion">Av. Calle 3 #53-07, Bogotá</span></div>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>Tel: 414 68 70</span></div>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg><span class="sede-horario">Lun - Jue y Dom de 11:30 AM - 6:00 PM, Vie - Sab de 11:30 AM - 9:00 PM</span></div>
+        </div>
+      </div>
+      <!-- Sede 2 Terraza -->
+      <div class="contact__card animate-on-scroll animate-on-scroll--delay-1" data-sede="terraza">
+        <div class="contact__card-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.883192683664!2d-74.11655192552723!3d4.614916342396314!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f994f0b8a6cc9%3A0x44e35e37d0e123f9!2zVHYuIDQyICMgMy04LCBQdWVudGUgQXJhbmRhLCBCb2dvdMOhLCBELkMuLCBCb2dvdMOhLCBCb2dvdMOhLCBELkMu!5e0!3m2!1ses-419!2sco!4v1774983031433!5m2!1ses-419!2sco" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+        <div class="contact__card-info">
+          <h4 class="contact__card-name">Sede Terraza</h4>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="sede-direccion">Tv 42 #3-08, Bogotá</span></div>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>Tel: 414 68 70</span></div>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg><span class="sede-horario">Lun - Sab 11:30 AM - 6:00 PM, Dom 11:30 AM - 7:00 PM</span></div>
+        </div>
+      </div>
+      <!-- Sede 3 Restrepo -->
+      <div class="contact__card animate-on-scroll animate-on-scroll--delay-2" data-sede="restrepo">
+        <div class="contact__card-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3977.0346736507167!2d-74.1006967!3d4.5878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f992001793e93%3A0x5c0cc6a6453bdbe4!2sCl.%2015%20Sur%20%2322-20%2C%20Bogot%C3%A1!5e0!3m2!1ses-419!2sco!4v1774982782125!5m2!1ses-419!2sco" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+        <div class="contact__card-info">
+          <h4 class="contact__card-name">Sede Restrepo</h4>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="sede-direccion">Cl 15 Sur #22-20, Bogotá</span></div>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>Tel: 414 68 70</span></div>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg><span class="sede-horario">Lun - Sab 11:30 AM - 6:00 PM, Dom 11:30 AM - 7:00 PM</span></div>
+        </div>
+      </div>
+      <!-- Sede 4 Nieves -->
+      <div class="contact__card animate-on-scroll animate-on-scroll--delay-2" data-sede="nieves">
+        <div class="contact__card-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.9329164392216!2d-74.07377492552737!3d4.606032942472005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f99a1f7c5f38d%3A0xfd6906d8717972ba!2sCra.%207%20%2319-74%2C%20Bogot%C3%A1!5e0!3m2!1ses-419!2sco!4v1774982893205!5m2!1ses-419!2sco" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+        <div class="contact__card-info">
+          <h4 class="contact__card-name">Sede Nieves</h4>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="sede-direccion">Cra 7 #19-74, Bogotá</span></div>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>Tel: 414 68 70</span></div>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg><span class="sede-horario">Lun - Sab 11:30 AM - 6:00 PM, Dom 11:30 AM - 7:00 PM</span></div>
+        </div>
+      </div>
+      <!-- Sede 5 7ma con 22 -->
+      <div class="contact__card animate-on-scroll animate-on-scroll--delay-2" data-sede="7ma-con-22">
+        <div class="contact__card-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.920901473239!2d-74.07319622552727!3d4.608181042453724!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9998c905d19d%3A0xa3f6e29a383d21f8!2sCra.%207%20%2322-12%2C%20Bogot%C3%A1!5e0!3m2!1ses-419!2sco!4v1774983083929!5m2!1ses-419!2sco" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+        <div class="contact__card-info">
+          <h4 class="contact__card-name">Sede 7ma con 22</h4>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="sede-direccion">Cra 7 #22-12, Bogotá</span></div>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>Tel: 414 68 70</span></div>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg><span class="sede-horario">11:30 AM - 7:00 PM</span></div>
+        </div>
+      </div>
+      <!-- Sede 6 Rojas -->
+      <div class="contact__card animate-on-scroll animate-on-scroll--delay-2" data-sede="rojas">
+        <div class="contact__card-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.557687584417!2d-74.10221432552706!3d4.672653241901139!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9b0ceb1cd0f9%3A0xa7483a5deb8d5d55!2zQXYuIDcwICMzLCBCb2dvdMOh!5e0!3m2!1ses-419!2sco!4v1774984022772!5m2!1ses-419!2sco" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+        <div class="contact__card-info">
+          <h4 class="contact__card-name">Sede Av. Rojas</h4>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span class="sede-direccion">Av. Rojas #3-08, Bogotá</span></div>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>Tel: 414 68 70</span></div>
+          <div class="contact__card-detail"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg><span class="sede-horario">Lun - Vie 11:30 AM - 6:00 PM, Sab y Dom 11:30 AM - 7:00 PM</span></div>
+        </div>
+      </div>
+    </div>
+    <!-- Contact Form -->
+    <div class="contact__form-section">
+      <div class="contact__info-block animate-on-scroll">
+        <h3>¿Tiene Preguntas?</h3>
+        <p style="margin:var(--space-md) 0 var(--space-xl)">No dude en contactarnos. Estamos aquí para atenderlo.</p>
+        <div class="contact__info-item"><div class="contact__info-icon">☎️</div><div><p class="contact__info-label">Teléfono</p><p class="contact__info-value">414 68 70</p></div></div>
+        <div class="contact__info-item"><div class="contact__info-icon">📧</div><div><p class="contact__info-label">Email</p><p class="contact__info-value">info@lostronquitos.com</p></div></div>
+        <div class="contact__info-item"><div class="contact__info-icon">🕐</div><div><p class="contact__info-label">Horario</p><p class="contact__info-value">Domingo a Domingo<br>12:00 pm - 6:00 pm</p></div></div>
+      </div>
+      <div class="reservations__form-wrapper animate-on-scroll animate-on-scroll--delay-2">
+        <h4 style="margin-bottom:var(--space-lg)">Envíenos un Mensaje</h4>
+        <form id="contactForm" action="https://formsubmit.co/ajax/nico35134@gmail.com" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="Nuevo Mensaje de Contacto - Los Tronquitos">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_template" value="table">
+          <div class="form__row"><div class="form__group form__group--full"><label class="form__label" for="ctName">Nombre *</label><input class="form__input" type="text" id="ctName" name="Nombre" required></div></div>
+          <div class="form__row">
+            <div class="form__group"><label class="form__label" for="ctPhone">Teléfono *</label><input class="form__input" type="tel" id="ctPhone" name="Teléfono" required></div>
+            <div class="form__group"><label class="form__label" for="ctEmail">Email</label><input class="form__input" type="email" id="ctEmail" name="Email"></div>
+          </div>
+          <div class="form__row"><div class="form__group form__group--full"><label class="form__label" for="ctMessage">Mensaje *</label><textarea class="form__textarea" id="ctMessage" name="Mensaje" rows="4" required placeholder="Escríbanos su mensaje..."></textarea></div></div>
+          <button type="submit" class="btn btn--primary form__submit">Enviar Mensaje</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img src="assets/images/logo.png" alt="Los Tronquitos">
+        <p>Más de 55 años llevando el auténtico sabor de la carne a la llanera a Bogotá. Asadero Gourmet desde 1971.</p>
+        <div class="footer__social">
+          <a href="https://www.instagram.com/lostronquitosparrilla" class="footer__social-link" aria-label="Instagram">I</a>
+          <a href="https://wa.me/573127923219" class="footer__social-link" aria-label="WhatsApp">W</a>
+          <a href="https://www.tiktok.com/@lostronquitoscol" class="footer__social-link" aria-label="TikTok">T</a>
+          <a href="https://www.youtube.com/@lostronquitos-d7c" class="footer__social-link" aria-label="YouTube">Y</a>
+          <a href="https://www.rappi.com.co/restaurantes/900065932-asadero-los-tronquitos" class ="footer__social-link" arial-label="Rappi">R</a>
+          <a href="https://linktr.ee/tronquitoscol" class="footer__social-link" arial-label="Linktree">L</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer__title">Navegación</h4>
+        <div class="footer__links">
+          <a href="#inicio" class="footer__link">Inicio</a>
+          <a href="nosotros.html" class="footer__link">Nosotros</a>
+          <a href="menu.pdf" class="footer__link">Menú</a>
+          <a href="galeria.html" class="footer__link">Galería</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer__title">Horarios</h4>
+        <div class="footer__links">
+          <span class="footer__link">Domingo a Domingo</span>
+          <span class="footer__link">11:30 pm - 6:00 pm</span>
+          <span class="footer__link" style="margin-top:var(--space-md);color:var(--color-primary)">Eventos las 24 horas</span>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer__title">Contacto</h4>
+        <div class="footer__links">
+          <span class="footer__link">Tel: 414 68 70</span>
+          <span class="footer__link">Av. Calle 3 #53-07 (Principal)</span>
+          <span class="footer__link">Bogotá, Colombia</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2026 Asadero Los Tronquitos — Todos los derechos reservados. Desde 1971 — Hecho por Syentropy</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" aria-label="Volver arriba">↑</button>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lightbox__close" aria-label="Cerrar">✕</button>
+  <button class="lightbox__nav lightbox__nav--prev" aria-label="Anterior">‹</button>
+  <img class="lightbox__img" src="" alt="Imagen ampliada">
+  <button class="lightbox__nav lightbox__nav--next" aria-label="Siguiente">›</button>
+</div>
+
+<!-- Success Modal -->
+<div class="modal" id="successModal">
+  <div class="modal__content">
+    <div class="modal__icon">✓</div>
+    <h3 class="modal__title">¡Reservación Enviada!</h3>
+    <p class="modal__text">Hemos recibido su solicitud. Nos comunicaremos con usted pronto para confirmar su reservación.</p>
+    <button class="btn btn--primary" onclick="document.getElementById('successModal').classList.remove('modal--open')">Cerrar</button>
+  </div>
+</div>
+
+<script src="sedes-config.js"></script>
+<script src="scripts.js"></script>
+<script>
+// ── RESERVACIONES: Horarios dinámicos + cupos en tiempo real ──────────
+const BACKEND = 'http://localhost:5000';
+let _scheduleCache = {};
+let _availCache = {};
+
+async function fetchSchedule(sede) {
+  if (_scheduleCache[sede]) return _scheduleCache[sede];
+  try {
+    const r = await fetch(`${BACKEND}/api/schedule?sede=${encodeURIComponent(sede)}`);
+    const d = await r.json();
+    if (d.status === 'success') { _scheduleCache[sede] = d.data; return d.data; }
+  } catch(e) {}
+  // fallback
+  return { open_time:'12:00', close_time:'18:00', slots:['12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00'] };
+}
+
+async function fetchAvailability(sede, fecha) {
+  const key = `${sede}|${fecha}`;
+  try {
+    const r = await fetch(`${BACKEND}/api/availability?sede=${encodeURIComponent(sede)}&fecha=${fecha}`);
+    const d = await r.json();
+    if (d.status === 'success') { _availCache[key] = d.data; return d.data; }
+  } catch(e) {}
+  return null;
+}
+
+function to12h(t) {
+  const [h,m] = t.split(':').map(Number);
+  const ampm = h >= 12 ? 'pm' : 'am';
+  const hh = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+  return `${hh}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+async function updateTimeSlots() {
+  const sede = document.getElementById('resSede').value;
+  const fecha = document.getElementById('resDate').value;
+  const timeSelect = document.getElementById('resTime');
+  timeSelect.innerHTML = '<option value="">Cargando horarios...</option>';
+
+  if (!sede) { timeSelect.innerHTML = '<option value="">— Seleccione sede primero —</option>'; return; }
+
+  const sched = await fetchSchedule(sede);
+  timeSelect.innerHTML = '<option value="">Seleccionar hora</option>';
+  sched.slots.forEach(slot => {
+    const opt = document.createElement('option');
+    opt.value = slot;
+    opt.textContent = to12h(slot);
+    timeSelect.appendChild(opt);
+  });
+
+  if (fecha) updateAvailabilityBanner(sede, fecha);
+}
+
+async function updateAvailabilityBanner(sede, fecha) {
+  const banner = document.getElementById('availabilityBanner');
+  if (!sede || !fecha) { banner.style.display='none'; return; }
+  const avail = await fetchAvailability(sede, fecha);
+  if (!avail) { banner.style.display='none'; return; }
+
+  banner.style.display = 'block';
+  if (avail.blocked) {
+    banner.style.background = '#f8d7da'; banner.style.color = '#721c24';
+    banner.textContent = `🚫 El restaurante no recibe reservas ese día. ${avail.note||''}`;
+  } else if (avail.available <= 0) {
+    banner.style.background = '#f8d7da'; banner.style.color = '#721c24';
+    banner.textContent = `⛔ Sin cupos disponibles.`;
+  } else if (avail.available <= avail.capacity * 0.2) {
+    banner.style.background = '#fff3cd'; banner.style.color = '#856404';
+    banner.textContent = `⚠️ ¡Pocos cupos!`;
+  } else {
+    banner.style.background = '#d4edda'; banner.style.color = '#155724';
+    banner.textContent = `✅ Hay cupos disponibles.`;
+  }
+}
+
+document.getElementById('resSede').addEventListener('change', updateTimeSlots);
+document.getElementById('resDate').addEventListener('change', () => {
+  const sede = document.getElementById('resSede').value;
+  const fecha = document.getElementById('resDate').value;
+  if (sede) updateAvailabilityBanner(sede, fecha);
+});
+
+// Fecha mínima: mañana
+(function() {
+  const d = new Date(); d.setDate(d.getDate()+1);
+  document.getElementById('resDate').min = d.toISOString().split('T')[0];
+})();
+
+// Envío del formulario al backend
+document.getElementById('reservationForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('resSubmitBtn');
+  const nombre = document.getElementById('resName').value.trim();
+  const telefono = document.getElementById('resPhone').value.trim();
+  const email = document.getElementById('resEmail').value.trim();
+  const sede = document.getElementById('resSede').value;
+  const fecha = document.getElementById('resDate').value;
+  const hora = document.getElementById('resTime').value;
+  const personas = parseInt(document.getElementById('resGuests').value);
+  const mensaje = document.getElementById('resMessage').value.trim();
+
+  if (!nombre || !telefono || !sede || !fecha || !hora || !personas) {
+    alert('Por favor complete todos los campos obligatorios.'); return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  try {
+    const resp = await fetch(`${BACKEND}/api/reservation`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ Nombre:nombre, Teléfono:telefono, Email:email, Sede:sede, Fecha:fecha, Hora:hora, Personas:personas, Mensaje:mensaje })
+    });
+    const result = await resp.json();
+    if (result.status === 'success') {
+      document.getElementById('successModal').classList.add('modal--open');
+      document.getElementById('reservationForm').reset();
+      document.getElementById('resTime').innerHTML = '<option value="">— Seleccione sede y fecha primero —</option>';
+      document.getElementById('availabilityBanner').style.display = 'none';
+      _availCache = {};
+    } else {
+      alert('❌ ' + (result.message || 'Error al enviar la reservación'));
+    }
+  } catch(err) {
+    alert('Error de conexión con el servidor. Por favor intente de nuevo.');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Enviar Reservación';
+  }
+});
+</script>
+</body>
+</html>

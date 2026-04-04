@@ -1,0 +1,18 @@
+# Python / Backend
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+backend/.env
+backend/venv/
+backend/env/
+backend/.pytest_cache/
+backend/database.db
+backend/test_api.py
+backend/test_reservations.py
+backend/check_*.py
+backend/debug_conn*.py
+backend/migrate_booleans.py
+
+# System
+.DS_Store
+Thumbs.db

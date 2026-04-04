@@ -1,0 +1,60 @@
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║    LOS TRONQUITOS - SISTEMA DE RESERVAS v1.0             ║
+║                                                            ║
+║    PRESENTA: Un sistema de gestión de reservas restaurante║
+║    completamente automatizado e integrado con N8N Cloud   ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+
+🚀 INICIO RÁPIDO - 18 DE MARZO 5:00 PM
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPCIÓN 1: AUTOMÁTICO (RECOMENDADO)
+───────────────────────────────────
+1. Doble-click en: INICIAR_DEMO.bat
+2. Espera 30 segundos
+3. Demo lista en http://localhost:5000
+
+OPCIÓN 2: MANUAL
+────────────────
+Terminal 1 (Backend):
+  cd backend
+  python -Xutf8=1 app.py
+
+Terminal 2 (Demo - espera 3 seg):
+  python DEMO_PRESENTACION.py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTACIÓN
+────────────────
+▸ GUIA_LANZAMIENTO.md           ← LEE ESTO PRIMERO
+▸ CONFIGURACION_N8N_CLOUD.md     ← Referencias técnicas
+▸ README.md                       ← Visión general
+▸ QUICK_REFERENCE.md             ← Referencia rápida
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ CHECKLIST 5 MIN ANTES
+────────────────────────
+□ Verificar: python VERIFICAR_SISTEMA.py (debe decir 12/12 ✓)
+□ Iniciar: Backend (INICIAR_DEMO.bat)
+□ Abrir: http://localhost:5000
+□ Ejecutar: Demo automática
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 SISTEMA LISTO
+────────────────
+✓ Backend operacional
+✓ N8N Cloud configurado  
+✓ Demo automatizado
+✓ 3 escenarios probados
+✓ 15 minutos de presentación
+
+───────────────────────────────────────────────────────────────
+Estado: ✅ LISTO PARA LANZAMIENTO
+Última verificación: 17 Marzo 2026 - 20:45 PM
+───────────────────────────────────────────────────────────────

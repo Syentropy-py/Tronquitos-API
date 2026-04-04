@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galería | Asadero Los Tronquitos</title>
+  <meta name="description" content="Nuestra galería de los mejores platos y momentos en Asadero Los Tronquitos.">
+  <meta property="og:title" content="Galería — Asadero Los Tronquitos">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="assets/images/logo2.png">
+</head>
+<body>
+
+<!-- ════════ HEADER ════════ -->
+<header class="header" id="header" style="background: rgba(26, 20, 16, 0.95);">
+  <div class="header__inner">
+    <a href="index.html#inicio" class="header__logo"><img src="assets/images/logo-larg.png" alt="Los Tronquitos - Asadero Gourmet desde 1971"></a>
+    <nav class="nav" aria-label="Navegación principal">
+      <ul class="nav__list">
+        <li><a href="index.html#inicio" class="nav__link">Inicio</a></li>
+        <li><a href="nosotros.html" class="nav__link">Nosotros</a></li>
+        <li><a href="menu.pdf" class="nav__link">Menú</a></li>
+        <li><a href="galeria.html" class="nav__link nav__link--active">Galería</a></li>
+        <li><a href="index.html#contacto" class="nav__link">Contacto</a></li>
+        <li><a href="index.html#reservaciones" class="nav__cta btn btn--primary">Reservar Ahora</a></li>
+      </ul>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú"><span class="hamburger__line"></span><span class="hamburger__line"></span><span class="hamburger__line"></span></button>
+  </div>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <ul class="mobile-menu__list">
+    <li><a href="index.html#inicio" class="mobile-menu__link">Inicio</a></li>
+    <li><a href="nosotros.html" class="mobile-menu__link">Nosotros</a></li>
+    <li><a href="menu.pdf" class="mobile-menu__link">Menú</a></li>
+    <li><a href="galeria.html" class="mobile-menu__link">Galería</a></li>
+    <li><a href="index.html#contacto" class="mobile-menu__link">Contacto</a></li>
+  </ul>
+</div>
+
+<div style="height: var(--header-height);"></div>
+
+<!-- ════════ GALERÍA ════════ -->
+<section class="section gallery" id="galeria">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-header__title">Momentos & Sabores</h2>
+      <div class="section-header__divider"></div>
+      <p class="section-header__description">Un recorrido visual por nuestros mejores platos, ambiente y equipo de la tradición Los Tronquitos.</p>
+    </div>
+    <div class="gallery__grid">
+      <div class="gallery__item animate-on-scroll" data-lightbox><img src="assets/images/new/chef.jpg" alt="Chef"><div class="gallery__item-overlay"><span>Chef</span></div></div>
+      <div class="gallery__item animate-on-scroll animate-on-scroll--delay-1" data-lightbox><img src="assets/images/new/churrasco1.jpeg" alt="Churrasco"><div class="gallery__item-overlay"><span>Churrasco</span></div></div>
+      <div class="gallery__item animate-on-scroll animate-on-scroll--delay-1" data-lightbox><img src="assets/images/new/_DSC2448.jpg" alt="Sandwich de Pollo Crispy"><div class="gallery__item-overlay"><span>Sandwich de Pollo Crispy</span></div></div>
+      <div class="gallery__item animate-on-scroll animate-on-scroll--delay-2" data-lightbox><img src="assets/images/new/chicharron.jpg" alt="Chicharrón"><div class="gallery__item-overlay"><span>Chicharrón</span></div></div>
+      <div class="gallery__item animate-on-scroll animate-on-scroll--delay-1" data-lightbox><img src="assets/images/new/coctel2.jpg" alt="Cocteles"><div class="gallery__item-overlay"><span>Cocteles</span></div></div>
+      <div class="gallery__item animate-on-scroll animate-on-scroll--delay-3" data-lightbox><img src="assets/images/new/_DSC2708.jpg" alt="Hamburguesa con Mondiola"><div class="gallery__item-overlay"><span>Hamburguesa con Mondiola</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img src="assets/images/logo.png" alt="Los Tronquitos">
+        <p>Más de 53 años llevando el auténtico sabor de la carne a la llanera a Bogotá. Asadero Gourmet desde 1971.</p>
+        <div class="footer__social">
+          <a href="#" class="footer__social-link" aria-label="Facebook">f</a>
+          <a href="#" class="footer__social-link" aria-label="Instagram">📷</a>
+          <a href="#" class="footer__social-link" aria-label="WhatsApp">💬</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer__title">Navegación</h4>
+        <div class="footer__links">
+          <a href="index.html#inicio" class="footer__link">Inicio</a>
+          <a href="nosotros.html" class="footer__link">Nosotros</a>
+          <a href="menu.pdf" class="footer__link">Menú</a>
+          <a href="galeria.html" class="footer__link">Galería</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer__title">Horarios</h4>
+        <div class="footer__links">
+          <span class="footer__link">Domingo a Domingo</span>
+          <span class="footer__link">11:30 pm - 6:00 pm</span>
+          <span class="footer__link" style="margin-top:var(--space-md);color:var(--color-primary)">Eventos las 24 horas</span>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer__title">Contacto</h4>
+        <div class="footer__links">
+          <span class="footer__link">Tel: 414 68 70</span>
+          <span class="footer__link">Av. Calle 3 #53-07</span>
+          <span class="footer__link">Bogotá, Colombia</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2026 Asadero Los Tronquitos — Todos los derechos reservados. Desde 1971.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" aria-label="Volver arriba">↑</button>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lightbox__close" aria-label="Cerrar">✕</button>
+  <button class="lightbox__nav lightbox__nav--prev" aria-label="Anterior">‹</button>
+  <img class="lightbox__img" src="" alt="Imagen ampliada">
+  <button class="lightbox__nav lightbox__nav--next" aria-label="Siguiente">›</button>
+</div>
+
+<script src="scripts.js"></script>
+</body>
+</html>
