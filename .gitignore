@@ -16,3 +16,7 @@ backend/migrate_booleans.py
 # System
 .DS_Store
 Thumbs.db
+
+# CSVs
+backend/reservations.csv
+backend/contacts.csv
