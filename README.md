@@ -147,3 +147,9 @@ Para consultar el panel de control administrativo ir a:
 **Última actualización:** Abril 2026  
 **Estado:** Producción Total Web (Vercel Serverless + Supabase PostgreSQL)
 **Versión:** 3.0 (Cloud-First)
+
+---
+
+## ⚒️ HECHO POR:
+
+**Nicolás Martínez Pineda (Syentropy's CEO & Head)**
