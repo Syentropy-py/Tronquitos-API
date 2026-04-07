@@ -1,0 +1,7 @@
+backend/
+docs/
+requirements.txt
+*.py
+.env
+.git
+.vscode

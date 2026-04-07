@@ -1,3 +1,8 @@
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
 # Python / Backend
 backend/__pycache__/
 backend/*.py[cod]
@@ -13,6 +18,10 @@ backend/check_*.py
 backend/debug_conn*.py
 backend/migrate_booleans.py
 
+# Node modules (si usas algún tool)
+node_modules/
+npm-debug.log
+
 # System
 .DS_Store
 Thumbs.db
@@ -20,3 +29,14 @@ Thumbs.db
 # CSVs
 backend/reservations.csv
 backend/contacts.csv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build outputs
+dist/
+build/
+*.egg-info/
