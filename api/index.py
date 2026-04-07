@@ -1,12 +1,13 @@
-import os
 import sys
+import os
+from flask import Flask
 
-# Add the 'backend' directory to the python path so it can resolve imports like 'database'
 backend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'backend')
 sys.path.append(backend_dir)
 
-from app import app as backend_flask_app
+# Initialize Flask app explicitly for Vercel AST builder
+app = Flask(__name__)
 
-# Vercel's Python builder scans the AST for an assignment to 'app'
-# This explicit assignment satisfies the builder's zero-config requirement
-app = backend_flask_app
+# Replace it with our backend app immediately at runtime
+import app as backend_app
+app = backend_app.app
