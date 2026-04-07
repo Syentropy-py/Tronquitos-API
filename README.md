@@ -1,26 +1,27 @@
 # 🍽️ LOS TRONQUITOS - Sistema de Gestión de Reservas
 
-**Sistema inteligente de gestión de reservas multi-sede con notificaciones automáticas vía WhatsApp + N8N**
+**Sistema inteligente de gestión de reservas multi-sede con notificaciones automáticas vía WhatsApp + N8N.**
+Desplegado en arquitectura Serverless usando **Vercel** y **Supabase** (PostgreSQL).
 
 ---
 
 ## ⚡ INICIO RÁPIDO (5 minutos)
 
-### Requisitos Previos
+### Requisitos Previos (Desarrollo Local)
 - **Python** 3.8+
 - **pip**
-- **PostgreSQL** 12+ ejecutándose localmente
-- **Base de datos PostgreSQL** llamada `tronquitos`
+- **Vercel CLI** (Opcional para pruebas locales: `npm i -g vercel`)
+- **Base de datos PostgreSQL** (o conexión a Supabase)
 
 ### Instalación Rápida
 
 ```bash
 # 1. Instalar dependencias Python
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 
 # 2. Configurar variables de entorno
-cp backend/.env.example backend/.env
-# Editar backend/.env con credenciales PostgreSQL
+cp .env.example .env
+# Editar .env asegurándote de incluir el DB_HOST de Supabase y credenciales PostgreSQL
 
 # 3. Inicializar base de datos PostgreSQL
 python backend/init_db.py
@@ -28,31 +29,17 @@ python backend/init_db.py
 # 4. (Opcional) Cargar datos iniciales de sedes
 python backend/setup_system.py
 
-# 5. Iniciar servidor
+# 5. Iniciar servidor localmente (Flask tradicional)
 python backend/app.py
-```
-
-### Verificación de Funcionamiento
-
-```bash
-# En otra terminal, listar todas las mesas:
-curl http://localhost:5000/api/tables
-
-# Ver disponibilidad para una fecha específica:
-curl "http://localhost:5000/api/availability?fecha=2026-04-15&sede=Principal"
 ```
 
 ---
 
 ## 📖 DOCUMENTACIÓN
 
-| Documento | Para | Ubicación |
-|-----------|------|-----------|
-| [DEPLOYMENT.md](backend/DEPLOYMENT.md) | Desplegar en producción | `backend/` |
-| [SCHEMA.md](docs/) | Schema de BD PostgreSQL | `docs/` |
-| Código inline | Endpoints y lógica | `backend/app.py` |
-
 ### Endpoints Principales
+
+Todos los llamados a la API del cliente web pasan por `/api/*` y Vercel se encarga de enviarlos a la instancia de Python en la nube.
 
 ```
 POST   /api/reservation           - Crear nueva reserva
@@ -64,203 +51,99 @@ POST   /api/contacts              - Enviar mensaje de contacto
 GET    /api/opinions              - Obtener opiniones/reseñas
 ```
 
-**Documentación detallada:** Ver `app.py` en sección de rutas (routes).
-
 ---
 
 ## 🎯 FUNCIONALIDADES PRINCIPALES
 
 ✅ **Gestión Multi-Sede**
-- 6 sedes independientes: Principal, Terraza, Restrepo, Nieves, 7ma con 22, Av Rojas
-- Control de horarios y capacidad por sede
-- Capacidad diaria personalizable
+- 6 sedes independientes: Principal, Terraza, Restrepo, Nieves, 7ma con 22, Av Rojas.
+- Control de horarios y capacidad por sede.
 
 ✅ **Sistema de Mesas Inteligente**
-- Disponibilidad en tiempo real
-- Asignación automática de mesas por capacidad
-- Estados: libre, reservada, ocupada
-- Control preventivo de overbooking
-
-✅ **Gestión de Reservas**
-- Creación y validación de reservas
-- Soporte para grupos especiales (>30 personas)
-- Historial completo de transacciones
-- Estados: confirmada, cancelada, completada, no-show
+- Disponibilidad en tiempo real para evitar Overbooking.
+- Asignación automática o manual desde el módulo Gestor.
 
 ✅ **Notificaciones (Integración N8N)**
-- Webhook integrado para N8N
-- Envío automático de datos de reservas/cancelaciones
-- Notificaciones por WhatsApp (configurable en N8N)
-- Información de cliente y detalles de reserva
+- Webhook integrado para disparar flujos en N8N.
+- Mensajes automáticos y de seguimiento vía WhatsApp (Cita, Cancelación, Bienvenida).
 
-✅ **Contacto y Opiniones**
-- Formulario de contacto con notificación SMTP
-- Sistema de opiniones/reseñas
-- Envío a Gmail vía SMTP
+✅ **Frontend + Backend Serverless**
+- Frontend desplegado gratis vía Vercel CDN (Red de contenidos ultrarrápida).
+- Backend de Python operando al instante mediante Vercel Serverless Functions (`api/index.py`).
 
 ---
 
-## 🔧 VERIFICACIÓN PRE-PRODUCTIVO
-
-```bash
-# Script de verificación del sistema
-python VERIFICAR_SISTEMA.py
-```
-
-Este verificará:
-- ✓ Estructura de archivos críticos
-- ✓ Dependencias Python instaladas
-- ✓ Conexión a PostgreSQL
-- ✓ Tablas de BD creadas
-- ✓ Variables de entorno configuradas
-
----
-
-## 📁 ESTRUCTURA DEL PROYECTO
+## 📁 ESTRUCTURA DEL PROYECTO ACTUAL
 
 ```
 TRONQUITOS/
 │
-├── 📗 README.md                    # Este archivo
-├── 📋 requirements.txt             # Dependencias Python
-├── 📄 LICENSE                      # Licencia del proyecto
+├── 📗 README.md                    # Etse archivo
+├── 📋 requirements.txt             # Dependencias estrictas del servidor Python en Vercel
+├── ⚙️ vercel.json                  # Configuración oficial de Serverless y Mapeos
 │
-├── 🔧 SCRIPTS DE UTILIDAD (Desarrollo/Admin)
-│   ├── VERIFICAR_SISTEMA.py        # Verifica que todo funcione correctamente
-│   ├── setup_system.py             # Configura sistema con 6 sedes
-│   ├── limpiar_datos.py            # Limpia datos transaccionales o BD completa
-│   ├── check_db.py                 # Verifica existencia de BD PostgreSQL
-│   └── INICIAR_DEMO.bat            # Script Windows para iniciar demo
+├── api/                            # 🎯 ENTRADA DEL SERVIDOR SERVERLESS (VERCEL)
+│   └── index.py                    # Puente encargado de instanciar Flask para Vercel
 │
-├── backend/                        # 🎯 CÓDIGO PRINCIPAL DE LA API
-│   ├── app.py                      # ⭐ Aplicación Flask (endpoints)
-│   ├── database.py                 # Conexión y operaciones CRUD en PostgreSQL
+├── backend/                        # 🧠 LÓGICA CORE DE PYTHON CLÁSICA
+│   ├── app.py                      # Rutas (Endpoints) de API y lógica de App
+│   ├── database.py                 # Conexión remota a PostgreSQL (Supabase)
 │   ├── models.py                   # Esquemas SQL de tablas
-│   ├── reservation_service.py      # Lógica de negocio de reservas
-│   ├── init_db.py                  # Inicializa tablas en PostgreSQL (ejecutar 1 vez)
-│   │
-│   ├── .env                        # Variables de entorno (NO versionar)
-│   ├── DEPLOYMENT.md               # Guía de despliegue a producción
-│   └── SCHEMA.sql                  # [OBSOLETO] Schema SQLite (solo referencia)
+│   ├── reservation_service.py      # Lógica de asignación y cruces de reservas
+│   ├── init_db.py                  # Setup de esquema inicial DB
+│   └── .env                        # Variables transitorias de desarrollo (NO versionar)
 │
-├── frontend/                       # 🎨 INTERFAZ WEB
-│   ├── index.html                  # Página principal
-│   ├── gestor.html                 # Panel de gestión de reservas
-│   ├── galeria.html                # Galería de imágenes
-│   ├── nosotros.html               # Información de la empresa
-│   ├── styles.css                  # Estilos CSS
-│   ├── scripts.js                  # Lógica frontend
-│   ├── sedes-config.js             # Configuración de 6 sedes
-│   └── assets/
-│       ├── images/                 # Imágenes del sitio
-│       └── src/                    # Recursos estáticos
-│
-└── docs/                           # 📚 Documentación
-    └── slides/                     # Presentaciones/diapositivas
+├── frontend/                       # 🎨 UI (INTERFAZ DE USUARIO ESTATICAMENTE DESPLEGADA)
+│   ├── index.html                  # Cliente Clientes
+│   ├── gestor.html                 # Cliente Administradores ⚠️ (Oculto)
+│   ├── galeria.html                # Galería promocional
+│   ├── nosotros.html               # About 
+│   ├── styles.css                  # Hoja de vida gráfica (Aesthetics)
+│   ├── scripts.js                  # Peticiones Fetch a URLs Relativas /api/*
+│   ├── sedes-config.js             # Info de sedes JS paramétrica
+│   └── assets/                     # Imágenes y catálogos PDF HD (+200mb CDN)
 ```
-
-### Archivos Críticos para la API
-
-| Archivo | Propósito | Debe editarse |
-|---------|-----------|----------------|
-| `app.py` | Endpoints y lógica principal | Sí (agregar/cambiar endpoints) |
-| `database.py` | CRUD y conexión PostgreSQL | Solo si cambias la BD |
-| `models.py` | Esquemas SQL | Solo si cambias las tablas |
-| `reservation_service.py` | Lógica de negocio | Sí (mejorar validaciones) |
-| `init_db.py` | Inicialización | No (ejecutar 1 sola vez) |
 
 ---
 
-## ⚙️ CONFIGURACIÓN (Variables de Entorno)
+## ⚙️ CONFIGURACIÓN VERCEL (PRODUCCIÓN)
 
-Crear archivo `backend/.env`:
+En la plataforma web de Vercel, en la sección de **Settings > Environment Variables**, es **OBLIGATORIO** cargar las siguientes claves secretas para que el backend reconozca al Gestor de PostgreSQL (Supabase) y el motor de flujos (N8N):
 
 ```env
-# PostgreSQL
-DB_HOST=localhost
+# Conexión Base de Datos Supabase (PostgreSQL)
+DB_HOST=aws-0-....pooler.supabase.com
 DB_PORT=5432
-DB_NAME=tronquitos
-DB_USER=postgres
-DB_PASSWORD=tu_contraseña_aquí
+DB_NAME=postgres
+DB_USER=postgres.xxxxxxxxxx
+DB_PASSWORD=tu_contraseña
 
-# SMTP para correos
-EMAIL_ADDRESS=tu_email@gmail.com
-EMAIL_PASSWORD=tu_contraseña_app
-
-# N8N Webhook para WhatsApp
-N8N_WEBHOOK_URL=https://tu-instancia-n8n.com/webhook-test/tu-id
-WHATSAPP_NUMBER=573127923219
-```
-
----
-
-## 📊 BASES DE DATOS
-
-### PostgreSQL (Actual - Producción)
-- **Host:** localhost
-- **Puerto:** 5432
-- **Usuario:** postgres
-- **Base de datos:** tronquitos
-
-**Tablas:**
-- `branches` - Sedes del restaurante
-- `tables` - Mesas disponibles
-- `reservations` - Historial de reservas
-- `daily_capacity` - Capacidad por día y sede
-- `events` - Auditoría de cambios
-- `contacts` - Mensajes de contacto
-- `opinions` - Reseñas y opiniones
-
-### Crear/Resetear Base de Datos
-
-```bash
-# Inicializar BD (crear tablas)
-python backend/init_db.py
-
-# Limpiar datos transaccionales (mantener estructura)
-python backend/limpiar_datos.py
-
-# Limpiar completamente incluyendo tablas
-python backend/limpiar_datos.py --remove-db
-python backend/init_db.py
+# Notificaciones y Motores
+EMAIL_ADDRESS=tu_correo@gmail.com
+EMAIL_PASSWORD=tu_app_password
+N8N_WEBHOOK_URL=https://tu-instancia-n8n.com/webhook/123
+WHATSAPP_NUMBER=573000000000
 ```
 
 ---
 
 ## 🚀 DESPLIEGUE A PRODUCCIÓN
 
-Ver [DEPLOYMENT.md](backend/DEPLOYMENT.md) para instrucciones completas.
+El sistema está configurado de manera especial para aprovechar la arquitectura "Zero Config / Builds" de **Vercel** usando Serverless Functions.
 
-**Resumen:**
-1. Usar **Gunicorn** en lugar de Flask dev server
-2. Configurar **Nginx** como proxy reverso
-3. SSL/HTTPS obligatorio
-4. Variables de entorno en servidor
-5. Backups automáticos de PostgreSQL
+1. **Haz cualquier iteración en local.**
+2. Realiza el guardado: `git add .` seguido de `git commit -m "Descripción"`.
+3. Empuja los cambios `git push origin main`.
+4. Vercel detectará el archivo de compilación **vercel.json** y levantará instántaneamente su respectivo *pipeline*: 
+   - Aislará la carpeta `/frontend` y la servirá mediante Fast CDN global.
+   - Creará un entorno micro-python leyendo `requirements.txt` exclusivamente para la carpeta lógica e ignorará las imágenes para no romper el límite de peso (250MB Limit Lambda Fix).
+   - Proyectará los EndPoints bajo `/api/(.*)`.
 
----
-
-## 🔍 TROUBLESHOOTING
-
-| Problema | Solución |
-|----------|----------|
-| `ModuleNotFoundError: No module named 'psycopg2'` | `pip install -r backend/requirements.txt` |
-| `Connection refused (PostgreSQL)` | Verifica que PostgreSQL esté corriendo: `pg_isready` |
-| `Database 'tronquitos' does not exist` | Ejecuta: `python backend/check_db.py` |
-| Frontend no carga estilos | Reinicia servidor Flask |
-| N8N no recibe datos | Verifica URL del webhook en `.env` |
-
----
-
-## 📝 NOTAS PARA EL EQUIPO
-
-- El proyecto pasó de **SQLite a PostgreSQL**, algunos archivos antiguos (SCHEMA.sql) son obsoletos
-- Siempre usar **variables de entorno** para credenciales (**NO** en el código)
-- Los endpoints están documentados en **docstrings** de `app.py`
-- Para cambios de esquema: modificar `models.py` + ejecutar `init_db.py` en BD limpia
+Para consultar el panel de control administrativo ir a:
+`https://url-app-vercel.com/gestor.html`
 
 ---
 
 **Última actualización:** Abril 2026  
-**Estado:** Producción (PostgreSQL)  
-**Versión:** 2.0 (Multi-sede + N8N)
+**Estado:** Producción Total Web (Vercel Serverless + Supabase PostgreSQL)
+**Versión:** 3.0 (Cloud-First)
