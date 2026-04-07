@@ -7,7 +7,7 @@
     }
   ],
   "functions": {
-    "api/index.py": {
+    "api/**/*.py": {
       "excludeFiles": "frontend/**"
     }
   }
