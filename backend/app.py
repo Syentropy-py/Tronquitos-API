@@ -117,13 +117,21 @@ def serve_file(filename):
 
 
 def append_to_csv(filename, data_dict):
-    csv_path = os.path.join(os.path.dirname(__file__), filename)
-    file_exists = os.path.isfile(csv_path)
-    with open(csv_path, mode='a', newline='', encoding='utf-8') as f:
-        writer = csv.DictWriter(f, fieldnames=data_dict.keys())
-        if not file_exists:
-            writer.writeheader()
-        writer.writerow(data_dict)
+    try:
+        # Vercel Serverless environment makes the filesystem read-only, except for /tmp
+        if os.environ.get('VERCEL') == '1':
+            csv_path = os.path.join('/tmp', filename)
+        else:
+            csv_path = os.path.join(os.path.dirname(__file__), filename)
+            
+        file_exists = os.path.isfile(csv_path)
+        with open(csv_path, mode='a', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=data_dict.keys())
+            if not file_exists:
+                writer.writeheader()
+            writer.writerow(data_dict)
+    except Exception as e:
+        logger.warning(f"Could not append to CSV {filename}: {e}")
 
 
 # ====================================================

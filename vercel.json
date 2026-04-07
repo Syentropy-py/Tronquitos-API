@@ -1,5 +1,11 @@
 {
   "buildCommand": "echo 'Frontend build'",
   "outputDirectory": "frontend",
-  "installCommand": "echo 'No install needed'"
+  "installCommand": "echo 'No install needed'",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
+    }
+  ]
 }

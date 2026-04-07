@@ -428,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log('[*] Datos antes de enviar:', data);
 
-        fetch('http://localhost:5000/api/reservation', {
+        fetch('/api/reservation', {
           method: 'POST',
           body: JSON.stringify(data),
           headers: {
@@ -494,7 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(contactForm);
         const data = Object.fromEntries(formData);
 
-        fetch('http://localhost:5000/api/contacts', {
+        fetch('/api/contacts', {
           method: 'POST',
           body: JSON.stringify(data),
           headers: {
