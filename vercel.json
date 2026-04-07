@@ -1,14 +1,26 @@
 {
-  "outputDirectory": "frontend",
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "250mb",
+        "excludeFiles": "frontend/**"
+      }
+    },
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/api/index.py"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/$1"
     }
-  ],
-  "functions": {
-    "api/index.py": {
-      "excludeFiles": "frontend/**"
-    }
-  }
+  ]
 }
