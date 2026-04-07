@@ -14,11 +14,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configuración de conexión a PostgreSQL
-DB_HOST = os.getenv('DB_HOST', 'localhost')
+DB_HOST = os.getenv('DB_HOST', 'aws-1-us-east-1.pooler.supabase.com')
 DB_PORT = int(os.getenv('DB_PORT', '5432'))
-DB_NAME = os.getenv('DB_NAME', 'tronquitos')
-DB_USER = os.getenv('DB_USER', 'postgres')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
+DB_NAME = os.getenv('DB_NAME', 'postgres')
+DB_USER = os.getenv('DB_USER', 'postgres.kzdlspaneugbymuzsber')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'Tronquitos2026')
 
 
 @contextmanager
@@ -29,7 +29,8 @@ def get_db_connection():
         port=DB_PORT,
         dbname=DB_NAME,
         user=DB_USER,
-        password=DB_PASSWORD
+        password=DB_PASSWORD,
+        sslmode='require'
     )
     try:
         yield conn
@@ -304,8 +305,7 @@ def get_available_tables(people_count, fecha, hora, sede='Centro'):
     """Obtiene mesas disponibles para un número de personas, datetime y sede."""
     query = '''
         SELECT t.* FROM tables t
-        WHERE t.status = 'free'
-        AND t.sede = %s
+        WHERE t.sede = %s
         AND t.capacity >= %s
         AND t.id NOT IN (
             SELECT table_id FROM reservations
@@ -313,6 +313,7 @@ def get_available_tables(people_count, fecha, hora, sede='Centro'):
             AND hora = %s
             AND sede = %s
             AND status IN ('confirmed', 'completed')
+            AND table_id IS NOT NULL
         )
         ORDER BY t.capacity ASC
     '''
@@ -344,8 +345,8 @@ def create_reservation(nombre, telefono, email, personas, fecha, hora, tabla_id,
     """Crea una nueva reserva en una sede específica"""
     query = '''
         INSERT INTO reservations 
-        (nombre, telefono, email, personas, fecha, hora, table_id, sede, mensaje, status, is_special_group, reservation_time)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 'confirmed', %s, CURRENT_TIMESTAMP)
+        (nombre, telefono, email, personas, fecha, hora, table_id, sede, mensaje, status, is_special_group)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 'confirmed', %s)
     '''
     return execute_query(query, (nombre, telefono, email, personas, fecha, hora, tabla_id, sede, mensaje, is_special_group))
 
@@ -466,10 +467,10 @@ def get_late_reservations(minutes_late=20):
 def create_event(event_type, reservation_id=None, table_id=None, description=''):
     """Crea un registro de evento para auditoría"""
     query = '''
-        INSERT INTO events (event_type, reservation_id, table_id, description)
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO events (event_type, reservation_id, details)
+        VALUES (%s, %s, %s)
     '''
-    return execute_query(query, (event_type, reservation_id, table_id, description))
+    return execute_query(query, (event_type, reservation_id, description))
 
 
 def get_events(limit=100):

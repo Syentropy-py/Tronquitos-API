@@ -10,11 +10,11 @@ from models import (
 load_dotenv()
 
 # Configuración de conexión a PostgreSQL
-DB_HOST = os.getenv('DB_HOST', 'localhost')
+DB_HOST = os.getenv('DB_HOST', 'aws-1-us-east-1.pooler.supabase.com')
 DB_PORT = int(os.getenv('DB_PORT', '5432'))
-DB_NAME = os.getenv('DB_NAME', 'tronquitos')
-DB_USER = os.getenv('DB_USER', 'postgres')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
+DB_NAME = os.getenv('DB_NAME', 'postgres')
+DB_USER = os.getenv('DB_USER', 'postgres.kzdlspaneugbymuzsber')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'Tronquitos2026')
 
 def init_db():
     try:
@@ -23,7 +23,8 @@ def init_db():
             port=DB_PORT,
             dbname=DB_NAME,
             user=DB_USER,
-            password=DB_PASSWORD
+            password=DB_PASSWORD,
+            sslmode='require'
         )
         cursor = conn.cursor(cursor_factory=RealDictCursor)
 
