@@ -9,5 +9,5 @@ sys.path.append(backend_dir)
 app = Flask(__name__)
 
 # Replace it with our backend app immediately at runtime
-import app as backend_app
+import backend.app as backend_app
 app = backend_app.app
