@@ -48,6 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Back to top button
     const btn = document.getElementById('backToTop');
     if (btn) btn.classList.toggle('back-to-top--visible', window.scrollY > 600);
+    // WhatsApp button
+    const whatsappBtn = document.querySelector('.whatsapp-btn');
+    if (whatsappBtn) whatsappBtn.classList.toggle('whatsapp-btn--visible', window.scrollY > 600);
   };
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();
