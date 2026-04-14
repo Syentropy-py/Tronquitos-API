@@ -25,8 +25,8 @@ logger = logging.getLogger(__name__)
 # ==========================================
 # CONFIGURACIÓN DE CORREO SMTP
 # ==========================================
-EMAIL_ADDRESS = "nico35134@gmail.com"
-EMAIL_PASSWORD = "wmmk zraj cept gphl"
+EMAIL_ADDRESS = os.getenv('SMTP_EMAIL', 'nico35134@gmail.com')
+EMAIL_PASSWORD = os.getenv('SMTP_PASSWORD', 'wmmk zraj cept gphl')
 
 def send_email_smtp(subject, data):
     try:
@@ -466,17 +466,11 @@ def create_reservation():
         # Guardar en CSV
         append_to_csv('reservations.csv', reservation_data)
 
-        # Enviar Email en background
-        threading.Thread(
-            target=send_email_smtp,
-            args=("Nueva Reservación - Los Tronquitos", reservation_data)
-        ).start()
+        # Enviar Email de forma síncrona
+        send_email_smtp("Nueva Reservación - Los Tronquitos", reservation_data)
 
-        # Enviar a N8N con cupos restantes
-        threading.Thread(
-            target=send_to_n8n,
-            args=(EventType.RESERVATION_CREATED, reservation_data, {"remaining_capacity": remaining})
-        ).start()
+        # Enviar a N8N de forma síncrona con cupos restantes
+        send_to_n8n(EventType.RESERVATION_CREATED, reservation_data, {"remaining_capacity": remaining})
 
         return jsonify({
             "status": "success",
@@ -545,10 +539,7 @@ def free_table():
 
         result = ReservationService.free_table(table_id)
         if result['success']:
-            threading.Thread(
-                target=send_to_n8n,
-                args=(EventType.TABLE_FREED, {'table_id': table_id})
-            ).start()
+            send_to_n8n(EventType.TABLE_FREED, {'table_id': table_id})
 
         return jsonify({
             "status": "success" if result['success'] else "error",
@@ -570,16 +561,13 @@ def cancel_reservation():
         result = ReservationService.cancel_reservation(reservation_id)
         if result['success']:
             reservation = db.get_reservation(reservation_id)
-            threading.Thread(
-                target=send_to_n8n,
-                args=(EventType.RESERVATION_CANCELLED, {
-                    'reservation_id': reservation_id,
-                    'Nombre': reservation['nombre'],
-                    'Teléfono': reservation['telefono'],
-                    'Fecha': reservation['fecha'],
-                    'Hora': reservation['hora']
-                })
-            ).start()
+            send_to_n8n(EventType.RESERVATION_CANCELLED, {
+                'reservation_id': reservation_id,
+                'Nombre': reservation['nombre'],
+                'Teléfono': reservation['telefono'],
+                'Fecha': reservation['fecha'],
+                'Hora': reservation['hora']
+            })
 
         return jsonify({
             "status": "success" if result['success'] else "error",
@@ -643,14 +631,8 @@ def create_contact():
         }
         append_to_csv('contacts.csv', contact_data)
 
-        threading.Thread(
-            target=send_email_smtp,
-            args=("Nuevo Mensaje de Contacto - Los Tronquitos", contact_data)
-        ).start()
-        threading.Thread(
-            target=send_to_n8n,
-            args=("contact", contact_data)
-        ).start()
+        send_email_smtp("Nuevo Mensaje de Contacto - Los Tronquitos", contact_data)
+        send_to_n8n("contact", contact_data)
 
         return jsonify({"status": "success", "message": "Mensaje enviado correctamente"}), 201
     except Exception as e:
