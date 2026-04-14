@@ -189,10 +189,12 @@
       <input type="text"   id="searchInput" placeholder="🔎 Nombre, teléfono o ID..." oninput="filterReservations()">
       <input type="date"   id="filterDate"  onchange="filterReservations()">
       <select id="filterSede" onchange="filterReservations()">
-        <option value="">Todas las sedes</option>
-        <option value="Centro">Centro</option>
-        <option value="Usaquén">Usaquén</option>
-        <option value="Chapinero">Chapinero</option>
+        <option value="Principal">Principal</option>
+        <option value="Terraza">Terraza</option>
+        <option value="Restrepo">Restrepo</option>
+        <option value="Nieves">Nieves</option>
+        <option value="7ma con 22">7ma con 22</option>
+        <option value="Av Rojas">Av Rojas</option>
       </select>
       <button class="btn btn-primary" onclick="loadAllReservations()">Actualizar</button>
     </div>
