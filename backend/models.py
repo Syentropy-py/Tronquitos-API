@@ -107,6 +107,46 @@ CREATE TABLE IF NOT EXISTS events (
 )
 '''
 
+# Esquema SQL para tabla de productos (menú dinámico)
+PRODUCTS_SCHEMA = '''
+CREATE TABLE IF NOT EXISTS products (
+    id SERIAL PRIMARY KEY,
+    sku VARCHAR(50) UNIQUE NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    precio INTEGER NOT NULL,
+    categoria VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    imagen_url TEXT,
+    disponible BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+'''
+
+# Trigger para actualizar updated_at automáticamente en products
+PRODUCTS_TRIGGER_SCHEMA = '''
+CREATE OR REPLACE FUNCTION update_product_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+   NEW.updated_at = CURRENT_TIMESTAMP;
+   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_trigger WHERE tgname = 'set_product_timestamp'
+    ) THEN
+        CREATE TRIGGER set_product_timestamp
+        BEFORE UPDATE ON products
+        FOR EACH ROW
+        EXECUTE FUNCTION update_product_timestamp();
+    END IF;
+END;
+$$;
+'''
+
 # Constantes para estados
 class TableStatus:
     FREE = 'free'

@@ -660,6 +660,227 @@ def get_events():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
+# ====================================================
+# ENDPOINTS DE PRODUCTOS (MENÚ DINÁMICO)
+# ====================================================
+
+@app.route('/api/products', methods=['GET'])
+def get_products():
+    """
+    Retorna todos los productos del menú.
+    Query Params:
+      - categoria: filtrar por categoría (opcional)
+      - disponible: si es 'true', solo retorna productos disponibles
+    """
+    try:
+        categoria = request.args.get('categoria')
+        solo_disponibles = request.args.get('disponible', '').lower() == 'true'
+        products = db.get_all_products(categoria=categoria, solo_disponibles=solo_disponibles)
+        return jsonify({
+            "status": "success",
+            "data": [_row_to_dict(p) for p in products]
+        }), 200
+    except Exception as e:
+        logger.error(f"[!] Error al obtener productos: {str(e)}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route('/api/products/<int:product_id>', methods=['GET'])
+def get_product(product_id):
+    """Retorna un producto específico por ID."""
+    try:
+        product = db.get_product(product_id)
+        if not product:
+            return jsonify({"status": "error", "message": "Producto no encontrado"}), 404
+        return jsonify({
+            "status": "success",
+            "data": _row_to_dict(product)
+        }), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route('/api/products', methods=['POST'])
+def create_product():
+    """
+    Crea un nuevo producto.
+    JSON Body:
+    {
+        "sku": "ESP-010",
+        "nombre": "Nuevo Plato",
+        "precio": 25000,
+        "categoria": "Especialidad",
+        "descripcion": "Descripción del plato",
+        "disponible": true
+    }
+    """
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"status": "error", "message": "Datos JSON requeridos"}), 400
+
+        # Validar campos requeridos
+        required_fields = ['sku', 'nombre', 'precio', 'categoria']
+        missing = [f for f in required_fields if not data.get(f)]
+        if missing:
+            return jsonify({
+                "status": "error",
+                "message": f"Campos requeridos faltantes: {', '.join(missing)}"
+            }), 400
+
+        # Validar tipos
+        sku = str(data['sku']).strip()
+        nombre = str(data['nombre']).strip()
+        categoria = str(data['categoria']).strip()
+        descripcion = str(data.get('descripcion', '')).strip() or None
+        imagen_url = str(data.get('imagen_url', '')).strip() or None
+        disponible = bool(data.get('disponible', True))
+
+        try:
+            precio = int(data['precio'])
+            if precio < 0:
+                raise ValueError()
+        except (ValueError, TypeError):
+            return jsonify({"status": "error", "message": "Precio debe ser un número entero positivo"}), 400
+
+        if not sku or len(sku) > 50:
+            return jsonify({"status": "error", "message": "SKU inválido (máx 50 caracteres)"}), 400
+        if not nombre or len(nombre) > 255:
+            return jsonify({"status": "error", "message": "Nombre inválido (máx 255 caracteres)"}), 400
+        if not categoria or len(categoria) > 100:
+            return jsonify({"status": "error", "message": "Categoría inválida (máx 100 caracteres)"}), 400
+
+        # Verificar SKU duplicado
+        existing = db.get_product_by_sku(sku)
+        if existing:
+            return jsonify({"status": "error", "message": f"Ya existe un producto con SKU '{sku}'"}), 409
+
+        product_id = db.create_product(sku, nombre, precio, categoria, descripcion, imagen_url, disponible)
+
+        return jsonify({
+            "status": "success",
+            "message": "Producto creado exitosamente",
+            "product_id": product_id
+        }), 201
+
+    except Exception as e:
+        logger.error(f"[!] Error al crear producto: {str(e)}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route('/api/products/<int:product_id>', methods=['PUT'])
+def update_product(product_id):
+    """
+    Actualiza un producto existente.
+    JSON Body: campos a actualizar (sku, nombre, precio, categoria, descripcion, imagen_url, disponible)
+    """
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"status": "error", "message": "Datos JSON requeridos"}), 400
+
+        # Verificar que el producto existe
+        product = db.get_product(product_id)
+        if not product:
+            return jsonify({"status": "error", "message": "Producto no encontrado"}), 404
+
+        # Validar campos si se proporcionan
+        update_data = {}
+
+        if 'nombre' in data:
+            nombre = str(data['nombre']).strip()
+            if not nombre or len(nombre) > 255:
+                return jsonify({"status": "error", "message": "Nombre inválido"}), 400
+            update_data['nombre'] = nombre
+
+        if 'precio' in data:
+            try:
+                precio = int(data['precio'])
+                if precio < 0:
+                    raise ValueError()
+                update_data['precio'] = precio
+            except (ValueError, TypeError):
+                return jsonify({"status": "error", "message": "Precio debe ser un número entero positivo"}), 400
+
+        if 'categoria' in data:
+            categoria = str(data['categoria']).strip()
+            if not categoria or len(categoria) > 100:
+                return jsonify({"status": "error", "message": "Categoría inválida"}), 400
+            update_data['categoria'] = categoria
+
+        if 'sku' in data:
+            sku = str(data['sku']).strip()
+            if not sku or len(sku) > 50:
+                return jsonify({"status": "error", "message": "SKU inválido"}), 400
+            # Verificar duplicado solo si cambia
+            if sku != product['sku']:
+                existing = db.get_product_by_sku(sku)
+                if existing:
+                    return jsonify({"status": "error", "message": f"Ya existe un producto con SKU '{sku}'"}), 409
+            update_data['sku'] = sku
+
+        if 'descripcion' in data:
+            update_data['descripcion'] = str(data.get('descripcion', '')).strip() or None
+
+        if 'imagen_url' in data:
+            update_data['imagen_url'] = str(data.get('imagen_url', '')).strip() or None
+
+        if 'disponible' in data:
+            update_data['disponible'] = bool(data['disponible'])
+
+        if not update_data:
+            return jsonify({"status": "error", "message": "No se proporcionaron campos para actualizar"}), 400
+
+        db.update_product(product_id, **update_data)
+
+        return jsonify({
+            "status": "success",
+            "message": "Producto actualizado exitosamente"
+        }), 200
+
+    except Exception as e:
+        logger.error(f"[!] Error al actualizar producto: {str(e)}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route('/api/products/<int:product_id>', methods=['DELETE'])
+def delete_product(product_id):
+    """Elimina un producto por ID."""
+    try:
+        product = db.get_product(product_id)
+        if not product:
+            return jsonify({"status": "error", "message": "Producto no encontrado"}), 404
+
+        db.delete_product(product_id)
+        return jsonify({
+            "status": "success",
+            "message": f"Producto '{product['nombre']}' eliminado correctamente"
+        }), 200
+
+    except Exception as e:
+        logger.error(f"[!] Error al eliminar producto: {str(e)}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route('/api/products/<int:product_id>/toggle', methods=['PATCH'])
+def toggle_product(product_id):
+    """Alterna la disponibilidad de un producto."""
+    try:
+        new_status = db.toggle_product_availability(product_id)
+        if new_status is None:
+            return jsonify({"status": "error", "message": "Producto no encontrado"}), 404
+
+        return jsonify({
+            "status": "success",
+            "message": f"Producto {'habilitado' if new_status else 'deshabilitado'}",
+            "disponible": new_status
+        }), 200
+
+    except Exception as e:
+        logger.error(f"[!] Error al cambiar disponibilidad: {str(e)}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
 if __name__ == '__main__':
     # Verificar conexión y crear tablas si no existen (PostgreSQL)
     try:

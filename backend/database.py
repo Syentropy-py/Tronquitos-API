@@ -503,3 +503,81 @@ def create_opinion(autor, rating, comentario):
         VALUES (%s, %s, %s)
     '''
     return execute_query(query, (autor, rating, comentario))
+
+
+# =============================================
+# OPERACIONES CRUD - PRODUCTOS (MENÚ)
+# =============================================
+
+def get_all_products(categoria=None, solo_disponibles=False):
+    """Obtiene todos los productos, con filtro opcional por categoría."""
+    if categoria and solo_disponibles:
+        query = 'SELECT * FROM products WHERE categoria = %s AND disponible = TRUE ORDER BY categoria, nombre'
+        return execute_query(query, (categoria,), fetch_all=True)
+    elif categoria:
+        query = 'SELECT * FROM products WHERE categoria = %s ORDER BY categoria, nombre'
+        return execute_query(query, (categoria,), fetch_all=True)
+    elif solo_disponibles:
+        query = 'SELECT * FROM products WHERE disponible = TRUE ORDER BY categoria, nombre'
+        return execute_query(query, fetch_all=True)
+    else:
+        query = 'SELECT * FROM products ORDER BY categoria, nombre'
+        return execute_query(query, fetch_all=True)
+
+
+def get_product(product_id):
+    """Obtiene un producto por ID."""
+    query = 'SELECT * FROM products WHERE id = %s'
+    return execute_query(query, (product_id,), fetch_one=True)
+
+
+def get_product_by_sku(sku):
+    """Obtiene un producto por SKU."""
+    query = 'SELECT * FROM products WHERE sku = %s'
+    return execute_query(query, (sku,), fetch_one=True)
+
+
+def create_product(sku, nombre, precio, categoria, descripcion=None, imagen_url=None, disponible=True):
+    """Crea un nuevo producto en la BD."""
+    query = '''
+        INSERT INTO products (sku, nombre, precio, categoria, descripcion, imagen_url, disponible)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+    '''
+    return execute_query(query, (sku, nombre, precio, categoria, descripcion, imagen_url, disponible))
+
+
+def update_product(product_id, **fields):
+    """Actualiza un producto. Solo actualiza los campos proporcionados."""
+    allowed_fields = {'sku', 'nombre', 'precio', 'categoria', 'descripcion', 'imagen_url', 'disponible'}
+    update_fields = {k: v for k, v in fields.items() if k in allowed_fields}
+
+    if not update_fields:
+        return False
+
+    set_clause = ', '.join(f'{k} = %s' for k in update_fields.keys())
+    values = list(update_fields.values()) + [product_id]
+
+    query = f'UPDATE products SET {set_clause} WHERE id = %s'
+    execute_query(query, tuple(values))
+    return True
+
+
+def delete_product(product_id):
+    """Elimina un producto de la BD."""
+    product = get_product(product_id)
+    if not product:
+        return False
+    query = 'DELETE FROM products WHERE id = %s'
+    execute_query(query, (product_id,))
+    return True
+
+
+def toggle_product_availability(product_id):
+    """Alterna la disponibilidad de un producto."""
+    product = get_product(product_id)
+    if not product:
+        return None
+    new_status = not product['disponible']
+    query = 'UPDATE products SET disponible = %s WHERE id = %s'
+    execute_query(query, (new_status, product_id))
+    return new_status

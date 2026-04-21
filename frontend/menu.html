@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú — Asadero Los Tronquitos | Carne a la Llanera desde 1971</title>
+  <meta name="description" content="Descubre nuestro menú completo: carnes a la llanera, chigüiro, sopas, entradas y más. Asadero Los Tronquitos, Bogotá desde 1971.">
+  <link rel="icon" type="image/png" href="assets/images/logo2.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --color-bg: #0f0d0a;
+      --color-surface: #1a1714;
+      --color-surface-2: #242019;
+      --color-gold: #d4a574;
+      --color-gold-light: #e8c9a0;
+      --color-gold-dark: #b8894f;
+      --color-cream: #f5f0e8;
+      --color-text: #d9d0c4;
+      --color-text-muted: #8a8279;
+      --color-accent: #c0392b;
+      --color-border: #2e2a24;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(180deg, rgba(15,13,10,0.98) 0%, rgba(15,13,10,0.92) 100%);
+      backdrop-filter: blur(20px);
+      padding: 16px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header__logo img {
+      height: 48px;
+      filter: brightness(1.1);
+    }
+    .header__nav {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+    .header__link {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .header__link:hover,
+    .header__link--active {
+      color: var(--color-gold);
+    }
+    .header__cta {
+      background: var(--color-gold);
+      color: var(--color-bg);
+      padding: 10px 22px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition: all 0.3s;
+    }
+    .header__cta:hover {
+      background: var(--color-gold-light);
+      transform: translateY(-1px);
+    }
+
+    /* ── HERO BANNER ── */
+    .menu-hero {
+      text-align: center;
+      padding: 80px 24px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .menu-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(212,165,116,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .menu-hero__ornament {
+      color: var(--color-gold);
+      font-size: 28px;
+      letter-spacing: 12px;
+      margin-bottom: 16px;
+      opacity: 0.6;
+    }
+    .menu-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 700;
+      color: var(--color-cream);
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    .menu-hero__subtitle {
+      font-size: 16px;
+      color: var(--color-text-muted);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .menu-hero__divider {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+      margin: 28px auto 0;
+    }
+
+    /* ── CATEGORY TABS ── */
+    .menu-tabs {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 32px;
+      position: sticky;
+      top: 80px;
+      z-index: 50;
+      background: var(--color-bg);
+    }
+    .menu-tabs__inner {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 12px 0;
+      -webkit-overflow-scrolling: touch;
+    }
+    .menu-tabs__inner::-webkit-scrollbar { display: none; }
+    .menu-tab {
+      flex-shrink: 0;
+      padding: 10px 20px;
+      border: 1px solid var(--color-border);
+      border-radius: 100px;
+      background: transparent;
+      color: var(--color-text-muted);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+    .menu-tab:hover {
+      border-color: var(--color-gold-dark);
+      color: var(--color-gold-light);
+    }
+    .menu-tab--active {
+      background: var(--color-gold);
+      border-color: var(--color-gold);
+      color: var(--color-bg);
+      font-weight: 600;
+    }
+    .menu-tab__icon {
+      margin-right: 6px;
+    }
+
+    /* ── MENU CONTENT ── */
+    .menu-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── CATEGORY SECTION ── */
+    .menu-category {
+      margin-bottom: 56px;
+      animation: fadeInSection 0.5s ease forwards;
+      opacity: 0;
+    }
+    .menu-category.visible { opacity: 1; }
+
+    @keyframes fadeInSection {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .menu-category__header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .menu-category__icon {
+      font-size: 28px;
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--color-surface-2), var(--color-surface));
+      border-radius: 12px;
+      border: 1px solid var(--color-border);
+    }
+    .menu-category__title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--color-cream);
+      letter-spacing: 0.5px;
+    }
+    .menu-category__count {
+      font-size: 12px;
+      color: var(--color-text-muted);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    /* ── PRODUCT ITEM ── */
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 18px 0;
+      border-bottom: 1px dotted rgba(212,165,116,0.15);
+      transition: all 0.3s;
+      gap: 16px;
+    }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item:hover {
+      padding-left: 8px;
+      background: linear-gradient(90deg, rgba(212,165,116,0.03) 0%, transparent 100%);
+    }
+    .menu-item__info {
+      flex: 1;
+      min-width: 0;
+    }
+    .menu-item__name {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-cream);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .menu-item__desc {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      max-width: 480px;
+    }
+    .menu-item__price-col {
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .menu-item__price {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-gold);
+      white-space: nowrap;
+    }
+    .menu-item__currency {
+      font-size: 12px;
+      color: var(--color-text-muted);
+      font-family: var(--font-body);
+      font-weight: 400;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* ── LOADING & EMPTY STATES ── */
+    .menu-loading {
+      text-align: center;
+      padding: 80px 24px;
+    }
+    .menu-loading__spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--color-border);
+      border-top-color: var(--color-gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .menu-loading__text {
+      color: var(--color-text-muted);
+      font-size: 14px;
+    }
+    .menu-empty {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--color-text-muted);
+    }
+    .menu-empty__icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+    .menu-empty__text { font-size: 16px; }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .footer__text {
+      color: var(--color-text-muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    .footer__link {
+      color: var(--color-gold);
+      text-decoration: none;
+    }
+    .footer__link:hover { text-decoration: underline; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .header__nav { display: none; }
+      .header__mobile-btn {
+        display: flex;
+        background: none;
+        border: none;
+        color: var(--color-gold);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 4px;
+      }
+      .menu-hero { padding: 56px 20px 36px; }
+      .menu-tabs { top: 80px; padding: 0 16px 24px; }
+      .menu-content { padding: 0 16px 60px; }
+      .menu-category__header { gap: 12px; }
+      .menu-category__icon { width: 44px; height: 44px; font-size: 22px; }
+      .menu-category__title { font-size: 22px; }
+      .menu-item { padding: 14px 0; }
+      .menu-item__name { font-size: 16px; }
+      .menu-item__price { font-size: 18px; }
+    }
+
+    @media (min-width: 769px) {
+      .header__mobile-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════ HEADER ════════ -->
+<header class="header">
+  <div class="header__inner">
+    <a href="index.html" class="header__logo">
+      <img src="assets/images/logo_los_tronquitos_3_page-0001-removebg-preview.png" alt="Los Tronquitos">
+    </a>
+    <nav class="header__nav">
+      <a href="index.html" class="header__link">Inicio</a>
+      <a href="nosotros.html" class="header__link">Nosotros</a>
+      <a href="menu.html" class="header__link header__link--active">Menú</a>
+      <a href="galeria.html" class="header__link">Galería</a>
+      <a href="index.html#contacto" class="header__link">Contacto</a>
+      <a href="index.html#reservaciones" class="header__cta">Reservar</a>
+    </nav>
+    <button class="header__mobile-btn" id="mobileMenuToggle" aria-label="Menú">☰</button>
+  </div>
+</header>
+
+<!-- ════════ HERO ════════ -->
+<section class="menu-hero">
+  <div class="menu-hero__ornament">✦ ✦ ✦</div>
+  <h1 class="menu-hero__title">Nuestra Carta</h1>
+  <p class="menu-hero__subtitle">Más de 55 años asando tradición. Descubre los sabores auténticos de la parrilla llanera colombiana.</p>
+  <div class="menu-hero__divider"></div>
+</section>
+
+<!-- ════════ CATEGORY TABS ════════ -->
+<div class="menu-tabs">
+  <div class="menu-tabs__inner" id="menuTabs">
+    <!-- Tabs se generan dinámicamente -->
+  </div>
+</div>
+
+<!-- ════════ MENU CONTENT ════════ -->
+<main class="menu-content" id="menuContent">
+  <div class="menu-loading" id="menuLoading">
+    <div class="menu-loading__spinner"></div>
+    <p class="menu-loading__text">Cargando menú...</p>
+  </div>
+</main>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="footer">
+  <p class="footer__text">
+    © 2026 Asadero Los Tronquitos — Desde 1971<br>
+    <a href="index.html" class="footer__link">Volver al inicio</a> · 
+    <a href="index.html#reservaciones" class="footer__link">Reservar mesa</a> · 
+    <a href="https://wa.me/573127923219" class="footer__link">WhatsApp</a>
+  </p>
+</footer>
+
+<script>
+/* ================================================================
+   ASADERO LOS TRONQUITOS — MENÚ DINÁMICO
+   Patrón: Factory / Abstract Factory
+   ================================================================ */
+
+// ── CONFIGURACIÓN ──
+const BACKEND = '';
+const CATEGORY_ORDER = [
+  'Entradas', 'Sopas', 'Especialidad', 'Pescados',
+  'Infantil', 'Adiciones', 'Bebidas', 'Bebidas Naturales'
+];
+const CATEGORY_ICONS = {
+  'Entradas': '🥗',
+  'Sopas': '🍲',
+  'Especialidad': '🥩',
+  'Pescados': '🐟',
+  'Infantil': '👶',
+  'Adiciones': '➕',
+  'Bebidas': '🍺',
+  'Bebidas Naturales': '🧃'
+};
+
+// ── PRODUCT CLASS (Base) ──
+class Product {
+  constructor(data) {
+    this.id = data.id;
+    this.sku = data.sku;
+    this.nombre = data.nombre;
+    this.precio = data.precio;
+    this.categoria = data.categoria;
+    this.descripcion = data.descripcion || '';
+    this.imagen_url = data.imagen_url;
+    this.disponible = data.disponible;
+  }
+
+  formatPrice() {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(this.precio);
+  }
+
+  render() {
+    const el = document.createElement('div');
+    el.className = 'menu-item';
+    el.setAttribute('data-product-id', this.id);
+    el.innerHTML = `
+      <div class="menu-item__info">
+        <h3 class="menu-item__name">${this._escapeHtml(this.nombre)}</h3>
+        ${this.descripcion ? `<p class="menu-item__desc">${this._escapeHtml(this.descripcion)}</p>` : ''}
+      </div>
+      <div class="menu-item__price-col">
+        <span class="menu-item__price">${this.formatPrice()}</span>
+      </div>
+    `;
+    return el;
+  }
+
+  _escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+}
+
+// ── PRODUCT SUBCLASSES (Specialized by Category) ──
+class EntradaProduct extends Product {
+  constructor(data) { super(data); }
+}
+
+class SopaProduct extends Product {
+  constructor(data) { super(data); }
+}
+
+class EspecialidadProduct extends Product {
+  constructor(data) { super(data); }
+  render() {
+    const el = super.render();
+    // Highlight premium items (e.g. Picada) with a subtle accent
+    if (this.precio >= 70000) {
+      el.querySelector('.menu-item__name').style.color = '#e8c9a0';
+      const badge = document.createElement('span');
+      badge.textContent = '★ Para compartir';
+      badge.style.cssText = 'font-size:11px;color:#d4a574;font-weight:600;margin-left:8px;';
+      el.querySelector('.menu-item__name').appendChild(badge);
+    }
+    return el;
+  }
+}
+
+class PescadoProduct extends Product {
+  constructor(data) { super(data); }
+}
+
+class InfantilProduct extends Product {
+  constructor(data) { super(data); }
+}
+
+class AdicionProduct extends Product {
+  constructor(data) { super(data); }
+}
+
+class BebidaProduct extends Product {
+  constructor(data) { super(data); }
+}
+
+class BebidaNaturalProduct extends Product {
+  constructor(data) { super(data); }
+}
+
+// ── PRODUCT FACTORY ──
+class ProductFactory {
+  createProduct(data) {
+    return new Product(data);
+  }
+}
+
+// Specialized factories
+class EntradaFactory extends ProductFactory {
+  createProduct(data) { return new EntradaProduct(data); }
+}
+class SopaFactory extends ProductFactory {
+  createProduct(data) { return new SopaProduct(data); }
+}
+class EspecialidadFactory extends ProductFactory {
+  createProduct(data) { return new EspecialidadProduct(data); }
+}
+class PescadoFactory extends ProductFactory {
+  createProduct(data) { return new PescadoProduct(data); }
+}
+class InfantilFactory extends ProductFactory {
+  createProduct(data) { return new InfantilProduct(data); }
+}
+class AdicionFactory extends ProductFactory {
+  createProduct(data) { return new AdicionProduct(data); }
+}
+class BebidaFactory extends ProductFactory {
+  createProduct(data) { return new BebidaProduct(data); }
+}
+class BebidaNaturalFactory extends ProductFactory {
+  createProduct(data) { return new BebidaNaturalProduct(data); }
+}
+
+// ── ABSTRACT PRODUCT FACTORY ──
+class AbstractProductFactory {
+  static _factories = {
+    'Entradas': new EntradaFactory(),
+    'Sopas': new SopaFactory(),
+    'Especialidad': new EspecialidadFactory(),
+    'Pescados': new PescadoFactory(),
+    'Infantil': new InfantilFactory(),
+    'Adiciones': new AdicionFactory(),
+    'Bebidas': new BebidaFactory(),
+    'Bebidas Naturales': new BebidaNaturalFactory(),
+  };
+
+  static createFactory(categoria) {
+    return this._factories[categoria] || new ProductFactory();
+  }
+
+  static createProduct(data) {
+    const factory = this.createFactory(data.categoria);
+    return factory.createProduct(data);
+  }
+}
+
+
+// ── MENU RENDERER ──
+class MenuRenderer {
+  constructor(contentEl, tabsEl) {
+    this.contentEl = contentEl;
+    this.tabsEl = tabsEl;
+    this.products = [];
+    this.categories = [];
+    this.activeFilter = 'all';
+  }
+
+  async loadProducts() {
+    try {
+      const resp = await fetch(`${BACKEND}/api/products?disponible=true`);
+      const data = await resp.json();
+      if (data.status === 'success') {
+        this.products = data.data.map(d => AbstractProductFactory.createProduct(d));
+        this._extractCategories();
+        this._renderTabs();
+        this._renderMenu();
+      } else {
+        this._renderError('No se pudo cargar el menú');
+      }
+    } catch (e) {
+      console.error('Error loading menu:', e);
+      this._renderError('Error de conexión. Intente de nuevo.');
+    }
+  }
+
+  _extractCategories() {
+    const found = new Set(this.products.map(p => p.categoria));
+    // Sort by predefined order, then alphabetically for unknown categories
+    this.categories = CATEGORY_ORDER.filter(c => found.has(c));
+    found.forEach(c => {
+      if (!this.categories.includes(c)) this.categories.push(c);
+    });
+  }
+
+  _renderTabs() {
+    this.tabsEl.innerHTML = '';
+
+    const allTab = document.createElement('button');
+    allTab.className = 'menu-tab menu-tab--active';
+    allTab.textContent = 'Todos';
+    allTab.dataset.filter = 'all';
+    allTab.addEventListener('click', () => this._filterCategory('all'));
+    this.tabsEl.appendChild(allTab);
+
+    this.categories.forEach(cat => {
+      const tab = document.createElement('button');
+      tab.className = 'menu-tab';
+      tab.dataset.filter = cat;
+      const icon = CATEGORY_ICONS[cat] || '🍽️';
+      tab.innerHTML = `<span class="menu-tab__icon">${icon}</span>${cat}`;
+      tab.addEventListener('click', () => this._filterCategory(cat));
+      this.tabsEl.appendChild(tab);
+    });
+  }
+
+  _filterCategory(filter) {
+    this.activeFilter = filter;
+
+    // Update tab active state
+    this.tabsEl.querySelectorAll('.menu-tab').forEach(t => {
+      t.classList.toggle('menu-tab--active', t.dataset.filter === filter);
+    });
+
+    // Show/hide categories with animation
+    const sections = this.contentEl.querySelectorAll('.menu-category');
+    sections.forEach((section, i) => {
+      const cat = section.dataset.category;
+      const show = filter === 'all' || cat === filter;
+      section.style.display = show ? 'block' : 'none';
+      if (show) {
+        section.style.animation = 'none';
+        section.offsetHeight; // trigger reflow
+        section.style.animation = `fadeInSection 0.4s ease ${i * 0.05}s forwards`;
+      }
+    });
+
+    // Scroll to content if filtering a specific category
+    if (filter !== 'all') {
+      const target = this.contentEl.querySelector(`.menu-category[data-category="${filter}"]`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }
+
+  _renderMenu() {
+    this.contentEl.innerHTML = '';
+
+    if (this.products.length === 0) {
+      this.contentEl.innerHTML = `
+        <div class="menu-empty">
+          <div class="menu-empty__icon">🍽️</div>
+          <p class="menu-empty__text">El menú estará disponible pronto.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Group products by category
+    const grouped = {};
+    this.products.forEach(p => {
+      if (!grouped[p.categoria]) grouped[p.categoria] = [];
+      grouped[p.categoria].push(p);
+    });
+
+    // Render each category in order
+    this.categories.forEach((cat, index) => {
+      if (!grouped[cat] || grouped[cat].length === 0) return;
+
+      const section = document.createElement('section');
+      section.className = 'menu-category visible';
+      section.dataset.category = cat;
+      section.style.animationDelay = `${index * 0.08}s`;
+
+      const icon = CATEGORY_ICONS[cat] || '🍽️';
+      const count = grouped[cat].length;
+
+      section.innerHTML = `
+        <div class="menu-category__header">
+          <div class="menu-category__icon">${icon}</div>
+          <div>
+            <h2 class="menu-category__title">${cat}</h2>
+            <span class="menu-category__count">${count} ${count === 1 ? 'plato' : 'platos'}</span>
+          </div>
+        </div>
+      `;
+
+      const itemsContainer = document.createElement('div');
+      itemsContainer.className = 'menu-category__items';
+
+      grouped[cat].forEach(product => {
+        itemsContainer.appendChild(product.render());
+      });
+
+      section.appendChild(itemsContainer);
+      this.contentEl.appendChild(section);
+    });
+  }
+
+  _renderError(message) {
+    this.contentEl.innerHTML = `
+      <div class="menu-empty">
+        <div class="menu-empty__icon">⚠️</div>
+        <p class="menu-empty__text">${message}</p>
+        <button onclick="location.reload()" style="margin-top:16px;padding:10px 24px;background:var(--color-gold);color:var(--color-bg);border:none;border-radius:6px;cursor:pointer;font-weight:600;">Reintentar</button>
+      </div>
+    `;
+  }
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  const content = document.getElementById('menuContent');
+  const tabs = document.getElementById('menuTabs');
+
+  const renderer = new MenuRenderer(content, tabs);
+  renderer.loadProducts();
+
+  // Mobile menu toggle (simple redirect for now)
+  const mobileBtn = document.getElementById('mobileMenuToggle');
+  if (mobileBtn) {
+    mobileBtn.addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+  }
+});
+</script>
+</body>
+</html>
