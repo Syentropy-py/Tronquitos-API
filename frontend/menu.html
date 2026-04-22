@@ -239,21 +239,85 @@
     /* ── PRODUCT ITEM ── */
     .menu-item {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      flex-direction: column;
       padding: 18px 0;
       border-bottom: 1px dotted rgba(212,165,116,0.15);
       transition: all 0.3s;
-      gap: 16px;
+      cursor: pointer;
     }
     .menu-item:last-child { border-bottom: none; }
     .menu-item:hover {
       padding-left: 8px;
       background: linear-gradient(90deg, rgba(212,165,116,0.03) 0%, transparent 100%);
     }
+    .menu-item__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      width: 100%;
+    }
     .menu-item__info {
       flex: 1;
       min-width: 0;
+    }
+    .menu-item__name {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-cream);
+      margin-bottom: 4px;
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .menu-item__chevron {
+      font-size: 12px;
+      color: var(--color-gold);
+      transition: transform 0.3s ease;
+    }
+    .menu-item.expanded .menu-item__chevron {
+      transform: rotate(180deg);
+    }
+    .menu-item__desc {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      max-width: 480px;
+    }
+    .menu-item__price-col {
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .menu-item__price {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-gold);
+      white-space: nowrap;
+    }
+    
+    /* Image Expansion */
+    .menu-item__photo-wrapper {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.3s ease, opacity 0.3s ease;
+      width: 100%;
+      opacity: 0;
+    }
+    .menu-item.expanded .menu-item__photo-wrapper {
+      max-height: 250px;
+      margin-top: 16px;
+      opacity: 1;
+    }
+    .menu-item__photo {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--color-border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
     .menu-item__name {
       font-family: var(--font-display);
@@ -464,15 +528,39 @@ class Product {
     const el = document.createElement('div');
     el.className = 'menu-item';
     el.setAttribute('data-product-id', this.id);
+    
+    // Si no hay imagen en la BD, usamos una de referencia genial de asado/parrilla para la demo
+    const imgUrl = this.imagen_url || 'https://images.unsplash.com/photo-1544025162-8360ebc85770?q=80&w=800&auto=format&fit=crop';
+
     el.innerHTML = `
-      <div class="menu-item__info">
-        <h3 class="menu-item__name">${this._escapeHtml(this.nombre)}</h3>
-        ${this.descripcion ? `<p class="menu-item__desc">${this._escapeHtml(this.descripcion)}</p>` : ''}
+      <div class="menu-item__header">
+        <div class="menu-item__info">
+          <h3 class="menu-item__name">${this._escapeHtml(this.nombre)} <span class="menu-item__chevron">▼</span></h3>
+          ${this.descripcion ? `<p class="menu-item__desc">${this._escapeHtml(this.descripcion)}</p>` : ''}
+        </div>
+        <div class="menu-item__price-col">
+          <span class="menu-item__price">${this.formatPrice()}</span>
+        </div>
       </div>
-      <div class="menu-item__price-col">
-        <span class="menu-item__price">${this.formatPrice()}</span>
+      <div class="menu-item__photo-wrapper">
+        <img src="${imgUrl}" alt="${this._escapeHtml(this.nombre)}" class="menu-item__photo" loading="lazy">
       </div>
     `;
+
+    // Interacción: Abrir/Cerrar la foto
+    el.addEventListener('click', () => {
+      const isExpanded = el.classList.contains('expanded');
+      
+      // Opcional: Cerrar los demás al abrir uno (acordeón)
+      /*
+      if (!isExpanded) {
+        document.querySelectorAll('.menu-item.expanded').forEach(item => item.classList.remove('expanded'));
+      }
+      */
+      
+      el.classList.toggle('expanded');
+    });
+
     return el;
   }
 
