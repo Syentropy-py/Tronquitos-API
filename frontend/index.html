@@ -440,9 +440,9 @@ document.getElementById('resDate').addEventListener('change', () => {
   if (sede) updateAvailabilityBanner(sede, fecha);
 });
 
-// Fecha mínima: mañana
+// Fecha mínima: hoy (permite reservas del mismo día)
 (function() {
-  const d = new Date(); d.setDate(d.getDate()+1);
+  const d = new Date();
   document.getElementById('resDate').min = d.toISOString().split('T')[0];
 })();
 
