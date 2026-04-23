@@ -401,11 +401,25 @@ async function updateTimeSlots() {
 
   const sched = await fetchSchedule(sede);
   timeSelect.innerHTML = '<option value="">Seleccionar hora</option>';
+  
   sched.slots.forEach(slot => {
-    const opt = document.createElement('option');
-    opt.value = slot;
-    opt.textContent = to12h(slot);
-    timeSelect.appendChild(opt);
+    let showSlot = true;
+    if (fecha) {
+      // Validar que la hora seleccionada sea al menos 1 hora (60 mins) en el futuro
+      const slotDate = new Date(`${fecha}T${slot}:00`);
+      const now = new Date();
+      const diffMins = (slotDate - now) / (1000 * 60);
+      if (diffMins < 60) {
+        showSlot = false;
+      }
+    }
+
+    if (showSlot) {
+      const opt = document.createElement('option');
+      opt.value = slot;
+      opt.textContent = to12h(slot);
+      timeSelect.appendChild(opt);
+    }
   });
 
   if (fecha) updateAvailabilityBanner(sede, fecha);

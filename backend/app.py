@@ -409,8 +409,20 @@ def create_reservation():
                     )
                 }), 400
 
+            # ── VALIDACIÓN: Mínimo 1 hora de anticipación ──
+            now_utc = datetime.now(dt.timezone.utc)
+            now_colombia = now_utc - timedelta(hours=5)
+            now_colombia = now_colombia.replace(tzinfo=None)
+            
+            res_datetime = datetime.strptime(f"{fecha} {hora_normalized}", "%Y-%m-%d %H:%M")
+            if res_datetime < now_colombia + timedelta(hours=1):
+                return jsonify({
+                    "status": "error",
+                    "message": "Las reservaciones deben hacerse con al menos 1 hora de anticipación."
+                }), 400
+
         except Exception as e:
-            return jsonify({"status": "error", "message": f"Hora inválida: {hora}"}), 400
+            return jsonify({"status": "error", "message": f"Hora o fecha inválida."}), 400
 
         # ── VALIDAR CAPACIDAD DEL DÍA ──────────────────────────────
         cap_check = db.can_accept_reservation(sede, fecha, personas)
