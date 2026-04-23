@@ -424,10 +424,7 @@ def create_reservation():
         if not cap_check['allowed']:
             return jsonify({
                 "status": "error",
-                "message": (
-                    f"No hay cupos disponibles para {personas} personas en {sede} el {fecha}. "
-                    f"Disponibles: {cap_check['available']} cupos."
-                )
+                "message": "No hay cupos disponibles para esta selección."
             }), 400
 
         # ── CREAR RESERVA ──────────────────────────────────────────
