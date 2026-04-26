@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory
+from functools import wraps
 from flask_cors import CORS
 import os
 import csv
@@ -85,6 +86,40 @@ def _row_to_dict(row):
 
 app = Flask(__name__)
 CORS(app)
+
+# ==========================================
+# AUTENTICACIÓN ADMIN
+# ==========================================
+ADMIN_TOKEN = os.getenv('ADMIN_TOKEN', 'Tronquitos2026@')
+
+def require_admin(f):
+    """Decorador que protege endpoints administrativos.
+    Requiere el header X-Admin-Token con el token correcto."""
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('X-Admin-Token', '')
+        if token != ADMIN_TOKEN:
+            return jsonify({
+                "status": "error",
+                "message": "Acceso no autorizado"
+            }), 401
+        return f(*args, **kwargs)
+    return decorated
+
+
+@app.route('/api/auth/verify', methods=['POST'])
+def verify_admin_token():
+    """Verifica si el token admin es correcto."""
+    try:
+        data = request.json or {}
+        token = data.get('token', '')
+        if token == ADMIN_TOKEN:
+            return jsonify({"status": "success", "valid": True}), 200
+        else:
+            return jsonify({"status": "error", "valid": False, "message": "Contraseña incorrecta"}), 401
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 # ======================================================
 # RUTAS PARA SERVIR ARCHIVOS ESTÁTICOS
@@ -255,6 +290,7 @@ def get_calendar():
 # ====================================================
 
 @app.route('/api/capacity', methods=['POST'])
+@require_admin
 def set_capacity():
     """
     Cambia la capacidad de un día específico para una sede.
@@ -281,6 +317,7 @@ def set_capacity():
 
 
 @app.route('/api/block-day', methods=['POST'])
+@require_admin
 def block_day():
     """
     Bloquea o desbloquea un día completo para una sede.
@@ -524,6 +561,7 @@ def _normalize_hora(hora_str):
 
 
 @app.route('/api/reservations', methods=['GET'])
+@require_admin
 def get_reservations():
     """Retorna todas las reservas activas."""
     try:
@@ -538,6 +576,7 @@ def get_reservations():
 
 
 @app.route('/api/free-table', methods=['POST'])
+@require_admin
 def free_table():
     """Libera manualmente una mesa."""
     try:
@@ -559,6 +598,7 @@ def free_table():
 
 
 @app.route('/api/cancel-reservation', methods=['POST'])
+@require_admin
 def cancel_reservation():
     """Cancela una reserva y libera la mesa asociada."""
     try:
@@ -587,6 +627,7 @@ def cancel_reservation():
 
 
 @app.route('/api/delete-reservation', methods=['POST'])
+@require_admin
 def delete_reservation():
     """Elimina una reserva de la BD y libera la mesa asociada."""
     try:
@@ -659,6 +700,7 @@ def get_tables():
 
 
 @app.route('/api/events', methods=['GET'])
+@require_admin
 def get_events():
     """Retorna el log de eventos."""
     try:
@@ -710,6 +752,7 @@ def get_product(product_id):
 
 
 @app.route('/api/products', methods=['POST'])
+@require_admin
 def create_product():
     """
     Crea un nuevo producto.
@@ -778,6 +821,7 @@ def create_product():
 
 
 @app.route('/api/products/<int:product_id>', methods=['PUT'])
+@require_admin
 def update_product(product_id):
     """
     Actualiza un producto existente.
@@ -853,6 +897,7 @@ def update_product(product_id):
 
 
 @app.route('/api/products/<int:product_id>', methods=['DELETE'])
+@require_admin
 def delete_product(product_id):
     """Elimina un producto por ID."""
     try:
@@ -872,6 +917,7 @@ def delete_product(product_id):
 
 
 @app.route('/api/products/<int:product_id>/toggle', methods=['PATCH'])
+@require_admin
 def toggle_product(product_id):
     """Alterna la disponibilidad de un producto."""
     try:

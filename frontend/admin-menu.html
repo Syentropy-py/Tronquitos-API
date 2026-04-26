@@ -119,9 +119,35 @@
       .toolbar input[type="text"] { min-width:100%; }
       .stat-grid { grid-template-columns:repeat(2,1fr); }
     }
+    
+    /* ── LOGIN GATE ── */
+    #loginGate { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:80vh; }
+    .login-box { background:#16213e; padding:40px; border-radius:12px; border:1px solid #2a2a4e; text-align:center; max-width:400px; width:100%; box-shadow:0 10px 30px rgba(0,0,0,0.5); }
+    .login-box h2 { color:#d4a574; margin-bottom:10px; font-size:24px; }
+    .login-box p { color:#888; margin-bottom:24px; font-size:14px; }
+    .login-box input { width:100%; padding:12px; margin-bottom:16px; background:#1a1a2e; border:1px solid #444; border-radius:6px; color:#fff; font-size:16px; text-align:center; }
+    .login-box input:focus { border-color:#d4a574; outline:none; }
+    .login-box button { width:100%; padding:12px; background:#d4a574; color:#1a1a2e; border:none; border-radius:6px; font-size:16px; font-weight:bold; cursor:pointer; transition:background 0.2s; }
+    .login-box button:hover { background:#c89460; }
+    .login-error { color:#e74c3c; font-size:14px; margin-bottom:16px; display:none; }
   </style>
 </head>
 <body>
+
+<!-- ── LOGIN GATE ── -->
+<div id="loginGate">
+  <div class="login-box">
+    <h2>🔒 Acceso Restringido</h2>
+    <p>Panel exclusivo para administración</p>
+    <div id="loginError" class="login-error">Contraseña incorrecta</div>
+    <input type="password" id="adminPassword" placeholder="Contraseña de administrador" onkeypress="if(event.key === 'Enter') login()">
+    <button onclick="login()">Ingresar</button>
+    <a href="/" style="display:block;margin-top:20px;color:#888;text-decoration:none;font-size:14px;">← Volver al sitio</a>
+  </div>
+</div>
+
+<!-- ── MAIN CONTENT (HIDDEN BY DEFAULT) ── -->
+<div id="adminContent" style="display:none;">
 
 <div class="header">
   <div>
@@ -132,6 +158,7 @@
     <a href="gestor.html">📋 Panel Reservas</a>
     <a href="menu.html" target="_blank">👁️ Ver Menú Público</a>
     <a href="/">← Volver al sitio</a>
+    <button onclick="logout()" style="background:none;border:none;color:#e74c3c;font-size:13px;cursor:pointer;font-weight:bold;margin-left:16px;">Cerrar Sesión</button>
   </div>
 </div>
 
@@ -265,6 +292,8 @@
   </div>
 </div>
 
+</div><!-- /adminContent -->
+
 <script>
 const BACKEND = '';
 const CATEGORY_PREFIXES = {
@@ -285,10 +314,90 @@ let allProducts = [];
 let pendingDeleteId = null;
 
 // ─────────────────────────────────────────
-// INIT
+// AUTHENTICATION & INIT
 // ─────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
+async function checkAuth() {
+  const token = sessionStorage.getItem('adminToken');
+  if (!token) {
+    showLogin();
+    return;
+  }
+  
+  try {
+    const res = await fetch(`${BACKEND}/api/auth/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+    const data = await res.json();
+    if (data.valid) {
+      showAdmin();
+    } else {
+      logout();
+    }
+  } catch(e) {
+    showLogin();
+  }
+}
+
+async function login() {
+  const token = document.getElementById('adminPassword').value;
+  const errorEl = document.getElementById('loginError');
+  
+  try {
+    const res = await fetch(`${BACKEND}/api/auth/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+    const data = await res.json();
+    
+    if (data.valid) {
+      sessionStorage.setItem('adminToken', token);
+      errorEl.style.display = 'none';
+      showAdmin();
+    } else {
+      errorEl.style.display = 'block';
+    }
+  } catch(e) {
+    errorEl.textContent = 'Error de conexión';
+    errorEl.style.display = 'block';
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('adminToken');
+  document.getElementById('adminPassword').value = '';
+  showLogin();
+}
+
+function showLogin() {
+  document.getElementById('loginGate').style.display = 'flex';
+  document.getElementById('adminContent').style.display = 'none';
+}
+
+function showAdmin() {
+  document.getElementById('loginGate').style.display = 'none';
+  document.getElementById('adminContent').style.display = 'block';
   loadProducts();
+}
+
+// Wrapper to automatically inject token
+async function adminFetch(url, options = {}) {
+  const token = sessionStorage.getItem('adminToken');
+  if (!options.headers) options.headers = {};
+  options.headers['X-Admin-Token'] = token || '';
+  
+  const res = await fetch(url, options);
+  if (res.status === 401) {
+    logout();
+    throw new Error("Unauthorized");
+  }
+  return res;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  checkAuth();
 });
 
 // ─────────────────────────────────────────
@@ -296,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ─────────────────────────────────────────
 async function loadProducts() {
   try {
-    const r = await fetch(`${BACKEND}/api/products`);
+    const r = await adminFetch(`${BACKEND}/api/products`);
     const d = await r.json();
     if (d.status === 'success') {
       allProducts = d.data || [];
@@ -466,7 +575,7 @@ async function saveProduct() {
     const url = isEdit ? `${BACKEND}/api/products/${editId}` : `${BACKEND}/api/products`;
     const method = isEdit ? 'PUT' : 'POST';
 
-    const r = await fetch(url, {
+    const r = await adminFetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
@@ -493,7 +602,7 @@ async function saveProduct() {
 // ─────────────────────────────────────────
 async function toggleAvailability(id) {
   try {
-    const r = await fetch(`${BACKEND}/api/products/${id}/toggle`, { method: 'PATCH' });
+    const r = await adminFetch(`${BACKEND}/api/products/${id}/toggle`, { method: 'PATCH' });
     const d = await r.json();
     if (d.status === 'success') {
       showMsg('globalMsg', `✅ ${d.message}`, 'success');
@@ -529,7 +638,7 @@ function closeDeleteModal() {
 async function confirmDelete() {
   if (!pendingDeleteId) return;
   try {
-    const r = await fetch(`${BACKEND}/api/products/${pendingDeleteId}`, { method: 'DELETE' });
+    const r = await adminFetch(`${BACKEND}/api/products/${pendingDeleteId}`, { method: 'DELETE' });
     const d = await r.json();
     closeDeleteModal();
 

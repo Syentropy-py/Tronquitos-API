@@ -114,17 +114,46 @@
     .modal textarea { min-height:70px; resize:vertical; }
     .modal-actions { display:flex; gap:10px; justify-content:flex-end; }
     .close-btn { float:right; background:none; border:none; color:#aaa; font-size:22px; cursor:pointer; }
+    
+    /* ── LOGIN GATE ── */
+    #loginGate { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:80vh; }
+    .login-box { background:#16213e; padding:40px; border-radius:12px; border:1px solid #2a2a4e; text-align:center; max-width:400px; width:100%; box-shadow:0 10px 30px rgba(0,0,0,0.5); }
+    .login-box h2 { color:#d4a574; margin-bottom:10px; font-size:24px; }
+    .login-box p { color:#888; margin-bottom:24px; font-size:14px; }
+    .login-box input { width:100%; padding:12px; margin-bottom:16px; background:#1a1a2e; border:1px solid #444; border-radius:6px; color:#fff; font-size:16px; text-align:center; }
+    .login-box input:focus { border-color:#d4a574; outline:none; }
+    .login-box button { width:100%; padding:12px; background:#d4a574; color:#1a1a2e; border:none; border-radius:6px; font-size:16px; font-weight:bold; cursor:pointer; transition:background 0.2s; }
+    .login-box button:hover { background:#c89460; }
+    .login-error { color:#e74c3c; font-size:14px; margin-bottom:16px; display:none; }
   </style>
 </head>
 <body>
+
+<!-- ── LOGIN GATE ── -->
+<div id="loginGate">
+  <div class="login-box">
+    <h2>🔒 Acceso Restringido</h2>
+    <p>Panel exclusivo para administración</p>
+    <div id="loginError" class="login-error">Contraseña incorrecta</div>
+    <input type="password" id="adminPassword" placeholder="Contraseña de administrador" onkeypress="if(event.key === 'Enter') login()">
+    <button onclick="login()">Ingresar</button>
+    <a href="/" style="display:block;margin-top:20px;color:#888;text-decoration:none;font-size:14px;">← Volver al sitio</a>
+  </div>
+</div>
+
+<!-- ── MAIN CONTENT (HIDDEN BY DEFAULT) ── -->
+<div id="adminContent" style="display:none;">
 
 <div class="header">
   <div>
     <h1>🍽️ Panel de Gestión — Los Tronquitos</h1>
     <p>Administración de Reservas y Capacidad</p>
   </div>
-  <a href="admin-menu.html" style="color:#d4a574;text-decoration:none;font-size:13px;margin-right:16px;">🍽️ Admin Menú</a>
-  <a href="/" style="color:#d4a574;text-decoration:none;font-size:13px;">← Volver al sitio</a>
+  <div>
+    <a href="admin-menu.html" style="color:#d4a574;text-decoration:none;font-size:13px;margin-right:16px;">🍽️ Admin Menú</a>
+    <a href="/" style="color:#d4a574;text-decoration:none;font-size:13px;margin-right:16px;">← Volver al sitio</a>
+    <button onclick="logout()" style="background:none;border:none;color:#e74c3c;font-size:13px;cursor:pointer;font-weight:bold;">Cerrar Sesión</button>
+  </div>
 </div>
 
 <div class="container">
@@ -208,6 +237,7 @@
   </div>
 
 </div><!-- /container -->
+</div><!-- /adminContent -->
 
 <!-- MODAL: CAMBIAR CAPACIDAD -->
 <div class="overlay" id="capOverlay">
@@ -254,21 +284,107 @@ let pendingDeleteId  = null;
 let isBlocked        = false;
 
 // ─────────────────────────────────────────
-// INIT
+// AUTHENTICATION & INIT
 // ─────────────────────────────────────────
+async function checkAuth() {
+  const token = sessionStorage.getItem('adminToken');
+  if (!token) {
+    showLogin();
+    return;
+  }
+  
+  // Verify token with backend
+  try {
+    const res = await fetch(`${BACKEND}/api/auth/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+    const data = await res.json();
+    if (data.valid) {
+      showAdmin();
+    } else {
+      logout();
+    }
+  } catch(e) {
+    showLogin(); // Network error, fallback to login
+  }
+}
+
+async function login() {
+  const token = document.getElementById('adminPassword').value;
+  const errorEl = document.getElementById('loginError');
+  
+  try {
+    const res = await fetch(`${BACKEND}/api/auth/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+    const data = await res.json();
+    
+    if (data.valid) {
+      sessionStorage.setItem('adminToken', token);
+      errorEl.style.display = 'none';
+      showAdmin();
+    } else {
+      errorEl.style.display = 'block';
+    }
+  } catch(e) {
+    errorEl.textContent = 'Error de conexión';
+    errorEl.style.display = 'block';
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('adminToken');
+  document.getElementById('adminPassword').value = '';
+  showLogin();
+}
+
+function showLogin() {
+  document.getElementById('loginGate').style.display = 'flex';
+  document.getElementById('adminContent').style.display = 'none';
+}
+
+function showAdmin() {
+  document.getElementById('loginGate').style.display = 'none';
+  document.getElementById('adminContent').style.display = 'block';
+  initAdmin();
+}
+
+// Wrapper to automatically inject token
+async function adminFetch(url, options = {}) {
+  const token = sessionStorage.getItem('adminToken');
+  if (!options.headers) options.headers = {};
+  options.headers['X-Admin-Token'] = token || '';
+  
+  const res = await fetch(url, options);
+  if (res.status === 401) {
+    logout();
+    throw new Error("Unauthorized");
+  }
+  return res;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  checkAuth();
+});
+
+function initAdmin() {
   buildDayNames();
   onSedeChange();
   loadAllReservations();
-  setInterval(loadAllReservations, 30000);
-});
+  if (window.refreshInterval) clearInterval(window.refreshInterval);
+  window.refreshInterval = setInterval(loadAllReservations, 30000);
+}
 
 function getSede() { return document.getElementById('sedeSelect').value; }
 
 async function onSedeChange() {
   // Cargar horario de la sede
   try {
-    const r = await fetch(`${BACKEND}/api/schedule?sede=${encodeURIComponent(getSede())}`);
+    const r = await adminFetch(`${BACKEND}/api/schedule?sede=${encodeURIComponent(getSede())}`);
     const d = await r.json();
     if (d.status === 'success') {
       const sd = d.data;
@@ -300,7 +416,7 @@ async function loadCalendar() {
   const sede = getSede();
   document.getElementById('monthTitle').textContent = `${MONTHS_ES[currentMonth-1]} ${currentYear}`;
   try {
-    const r = await fetch(`${BACKEND}/api/calendar?sede=${encodeURIComponent(sede)}&year=${currentYear}&month=${currentMonth}`);
+    const r = await adminFetch(`${BACKEND}/api/calendar?sede=${encodeURIComponent(sede)}&year=${currentYear}&month=${currentMonth}`);
     const d = await r.json();
     if (d.status === 'success') {
       calData = d.data.days;
@@ -378,7 +494,7 @@ async function loadDayDetail(date) {
   panel.style.display = 'block';
 
   try {
-    const r = await fetch(`${BACKEND}/api/availability?sede=${encodeURIComponent(getSede())}&fecha=${date}`);
+    const r = await adminFetch(`${BACKEND}/api/availability?sede=${encodeURIComponent(getSede())}&fecha=${date}`);
     const d = await r.json();
     if (d.status !== 'success') return;
     selectedDayData = d.data;
@@ -442,7 +558,7 @@ async function saveCapacity() {
   if (!cap || cap < 1) { alert('Ingrese una capacidad válida'); return; }
 
   try {
-    const r = await fetch(`${BACKEND}/api/capacity`, {
+    const r = await adminFetch(`${BACKEND}/api/capacity`, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ sede: getSede(), date: selectedDate, capacity: cap, note })
@@ -462,7 +578,7 @@ async function toggleBlock() {
   const block = !isBlocked;
   const note  = block ? (prompt('Motivo del bloqueo (opcional):') || 'Día bloqueado') : '';
   try {
-    const r = await fetch(`${BACKEND}/api/block-day`, {
+    const r = await adminFetch(`${BACKEND}/api/block-day`, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ sede: getSede(), date: selectedDate, block, note })
@@ -486,7 +602,7 @@ function openDelete(id, nombre, personas) {
 async function confirmDelete() {
   if (!pendingDeleteId) return;
   try {
-    const r = await fetch(`${BACKEND}/api/delete-reservation`, {
+    const r = await adminFetch(`${BACKEND}/api/delete-reservation`, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ reservation_id: pendingDeleteId })
@@ -505,7 +621,7 @@ async function confirmDelete() {
 // ─────────────────────────────────────────
 async function loadAllReservations() {
   try {
-    const r = await fetch(`${BACKEND}/api/reservations`);
+    const r = await adminFetch(`${BACKEND}/api/reservations`);
     const d = await r.json();
     if (d.status === 'success') {
       allReservations = d.data || [];
@@ -562,8 +678,8 @@ async function loadStats() {
   const today = new Date().toISOString().split('T')[0];
   try {
     const [rAll, rToday] = await Promise.all([
-      fetch(`${BACKEND}/api/reservations`).then(r=>r.json()),
-      fetch(`${BACKEND}/api/availability?sede=${encodeURIComponent(sede)}&fecha=${today}`).then(r=>r.json())
+      adminFetch(`${BACKEND}/api/reservations`).then(r=>r.json()),
+      adminFetch(`${BACKEND}/api/availability?sede=${encodeURIComponent(sede)}&fecha=${today}`).then(r=>r.json())
     ]);
 
     if (rAll.status === 'success') {
