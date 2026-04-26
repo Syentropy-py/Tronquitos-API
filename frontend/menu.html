@@ -481,25 +481,41 @@
 
 <script>
 /* ================================================================
-   ASADERO LOS TRONQUITOS — MENÚ DINÁMICO
+   ASADERO LOS TRONQUITOS — MENÚ DINÁMICO 2026
    Patrón: Factory / Abstract Factory
    ================================================================ */
 
 // ── CONFIGURACIÓN ──
 const BACKEND = '';
+
+// Categorías que se muestran como tabs individuales
 const CATEGORY_ORDER = [
-  'Entradas', 'Sopas', 'Especialidad', 'Pescados',
-  'Infantil', 'Adiciones', 'Bebidas', 'Bebidas Naturales'
+  'Entradas', 'Sopas', 'Especialidad de la Casa', 'Hamburguesas',
+  'Pescados', 'Menú Infantil', 'Nuevos Platos', 'Adicionales', 'Bebidas'
 ];
+
+// Las categorías de bebidas se agrupan bajo un solo tab "Bebidas"
+const BEBIDAS_SUBCATEGORIES = ['Bebidas Naturales', 'Bebidas con Licor', 'Bebidas Calientes'];
+
 const CATEGORY_ICONS = {
   'Entradas': '🥗',
   'Sopas': '🍲',
-  'Especialidad': '🥩',
+  'Especialidad de la Casa': '🥩',
+  'Hamburguesas': '🍔',
   'Pescados': '🐟',
-  'Infantil': '👶',
-  'Adiciones': '➕',
-  'Bebidas': '🍺',
-  'Bebidas Naturales': '🧃'
+  'Menú Infantil': '👶',
+  'Nuevos Platos': '⭐',
+  'Adicionales': '➕',
+  'Bebidas': '🍹',
+  'Bebidas Naturales': '🧃',
+  'Bebidas con Licor': '🍺',
+  'Bebidas Calientes': '☕'
+};
+
+const BEBIDAS_SUBLABELS = {
+  'Bebidas Naturales': 'Naturales',
+  'Bebidas con Licor': 'Con Licor',
+  'Bebidas Calientes': 'Calientes'
 };
 
 // ── PRODUCT CLASS (Base) ──
@@ -529,7 +545,6 @@ class Product {
     el.className = 'menu-item';
     el.setAttribute('data-product-id', this.id);
     
-    // Si no hay imagen en la BD, usamos una de referencia genial de asado/parrilla para la demo
     const imgUrl = this.imagen_url || 'https://images.unsplash.com/photo-1544025162-8360ebc85770?q=80&w=800&auto=format&fit=crop';
 
     el.innerHTML = `
@@ -547,17 +562,7 @@ class Product {
       </div>
     `;
 
-    // Interacción: Abrir/Cerrar la foto
     el.addEventListener('click', () => {
-      const isExpanded = el.classList.contains('expanded');
-      
-      // Opcional: Cerrar los demás al abrir uno (acordeón)
-      /*
-      if (!isExpanded) {
-        document.querySelectorAll('.menu-item.expanded').forEach(item => item.classList.remove('expanded'));
-      }
-      */
-      
       el.classList.toggle('expanded');
     });
 
@@ -572,23 +577,13 @@ class Product {
 }
 
 // ── PRODUCT SUBCLASSES (Specialized by Category) ──
-class EntradaProduct extends Product {
-  constructor(data) { super(data); }
-}
-
-class SopaProduct extends Product {
-  constructor(data) { super(data); }
-}
-
 class EspecialidadProduct extends Product {
-  constructor(data) { super(data); }
   render() {
     const el = super.render();
-    // Highlight premium items (e.g. Picada) with a subtle accent
-    if (this.precio >= 70000) {
+    if (this.precio >= 55000) {
       el.querySelector('.menu-item__name').style.color = '#e8c9a0';
       const badge = document.createElement('span');
-      badge.textContent = '★ Para compartir';
+      badge.textContent = '★ Premium';
       badge.style.cssText = 'font-size:11px;color:#d4a574;font-weight:600;margin-left:8px;';
       el.querySelector('.menu-item__name').appendChild(badge);
     }
@@ -596,81 +591,44 @@ class EspecialidadProduct extends Product {
   }
 }
 
-class PescadoProduct extends Product {
-  constructor(data) { super(data); }
+class HamburguesaProduct extends Product {
+  render() {
+    const el = super.render();
+    if (this.nombre.includes('Los Tronquitos')) {
+      el.querySelector('.menu-item__name').style.color = '#e8c9a0';
+      const badge = document.createElement('span');
+      badge.textContent = '🔥 Especial';
+      badge.style.cssText = 'font-size:11px;color:#d4a574;font-weight:600;margin-left:8px;';
+      el.querySelector('.menu-item__name').appendChild(badge);
+    }
+    return el;
+  }
 }
 
-class InfantilProduct extends Product {
-  constructor(data) { super(data); }
-}
-
-class AdicionProduct extends Product {
-  constructor(data) { super(data); }
-}
-
-class BebidaProduct extends Product {
-  constructor(data) { super(data); }
-}
-
-class BebidaNaturalProduct extends Product {
-  constructor(data) { super(data); }
+class NuevoPlatoProduct extends Product {
+  render() {
+    const el = super.render();
+    const badge = document.createElement('span');
+    badge.textContent = '✨ Nuevo';
+    badge.style.cssText = 'font-size:11px;color:#d4a574;font-weight:600;margin-left:8px;';
+    el.querySelector('.menu-item__name').appendChild(badge);
+    return el;
+  }
 }
 
 // ── PRODUCT FACTORY ──
 class ProductFactory {
   createProduct(data) {
-    return new Product(data);
+    switch (data.categoria) {
+      case 'Especialidad de la Casa': return new EspecialidadProduct(data);
+      case 'Hamburguesas': return new HamburguesaProduct(data);
+      case 'Nuevos Platos': return new NuevoPlatoProduct(data);
+      default: return new Product(data);
+    }
   }
 }
 
-// Specialized factories
-class EntradaFactory extends ProductFactory {
-  createProduct(data) { return new EntradaProduct(data); }
-}
-class SopaFactory extends ProductFactory {
-  createProduct(data) { return new SopaProduct(data); }
-}
-class EspecialidadFactory extends ProductFactory {
-  createProduct(data) { return new EspecialidadProduct(data); }
-}
-class PescadoFactory extends ProductFactory {
-  createProduct(data) { return new PescadoProduct(data); }
-}
-class InfantilFactory extends ProductFactory {
-  createProduct(data) { return new InfantilProduct(data); }
-}
-class AdicionFactory extends ProductFactory {
-  createProduct(data) { return new AdicionProduct(data); }
-}
-class BebidaFactory extends ProductFactory {
-  createProduct(data) { return new BebidaProduct(data); }
-}
-class BebidaNaturalFactory extends ProductFactory {
-  createProduct(data) { return new BebidaNaturalProduct(data); }
-}
-
-// ── ABSTRACT PRODUCT FACTORY ──
-class AbstractProductFactory {
-  static _factories = {
-    'Entradas': new EntradaFactory(),
-    'Sopas': new SopaFactory(),
-    'Especialidad': new EspecialidadFactory(),
-    'Pescados': new PescadoFactory(),
-    'Infantil': new InfantilFactory(),
-    'Adiciones': new AdicionFactory(),
-    'Bebidas': new BebidaFactory(),
-    'Bebidas Naturales': new BebidaNaturalFactory(),
-  };
-
-  static createFactory(categoria) {
-    return this._factories[categoria] || new ProductFactory();
-  }
-
-  static createProduct(data) {
-    const factory = this.createFactory(data.categoria);
-    return factory.createProduct(data);
-  }
-}
+const factory = new ProductFactory();
 
 
 // ── MENU RENDERER ──
@@ -679,7 +637,7 @@ class MenuRenderer {
     this.contentEl = contentEl;
     this.tabsEl = tabsEl;
     this.products = [];
-    this.categories = [];
+    this.displayCategories = [];
     this.activeFilter = 'all';
   }
 
@@ -688,7 +646,7 @@ class MenuRenderer {
       const resp = await fetch(`${BACKEND}/api/products?disponible=true`);
       const data = await resp.json();
       if (data.status === 'success') {
-        this.products = data.data.map(d => AbstractProductFactory.createProduct(d));
+        this.products = data.data.map(d => factory.createProduct(d));
         this._extractCategories();
         this._renderTabs();
         this._renderMenu();
@@ -703,10 +661,24 @@ class MenuRenderer {
 
   _extractCategories() {
     const found = new Set(this.products.map(p => p.categoria));
-    // Sort by predefined order, then alphabetically for unknown categories
-    this.categories = CATEGORY_ORDER.filter(c => found.has(c));
+    
+    // Build display categories (tabs) — Bebidas subcategories merge into "Bebidas"
+    this.displayCategories = [];
+    CATEGORY_ORDER.forEach(cat => {
+      if (cat === 'Bebidas') {
+        // Show "Bebidas" tab if any beverage subcategory has products
+        const hasBeverage = BEBIDAS_SUBCATEGORIES.some(sub => found.has(sub));
+        if (hasBeverage) this.displayCategories.push('Bebidas');
+      } else if (found.has(cat)) {
+        this.displayCategories.push(cat);
+      }
+    });
+
+    // Add any unknown categories at the end
     found.forEach(c => {
-      if (!this.categories.includes(c)) this.categories.push(c);
+      if (!BEBIDAS_SUBCATEGORIES.includes(c) && !this.displayCategories.includes(c)) {
+        this.displayCategories.push(c);
+      }
     });
   }
 
@@ -720,7 +692,7 @@ class MenuRenderer {
     allTab.addEventListener('click', () => this._filterCategory('all'));
     this.tabsEl.appendChild(allTab);
 
-    this.categories.forEach(cat => {
+    this.displayCategories.forEach(cat => {
       const tab = document.createElement('button');
       tab.className = 'menu-tab';
       tab.dataset.filter = cat;
@@ -734,27 +706,39 @@ class MenuRenderer {
   _filterCategory(filter) {
     this.activeFilter = filter;
 
-    // Update tab active state
     this.tabsEl.querySelectorAll('.menu-tab').forEach(t => {
       t.classList.toggle('menu-tab--active', t.dataset.filter === filter);
     });
 
-    // Show/hide categories with animation
     const sections = this.contentEl.querySelectorAll('.menu-category');
     sections.forEach((section, i) => {
       const cat = section.dataset.category;
-      const show = filter === 'all' || cat === filter;
+      let show = false;
+
+      if (filter === 'all') {
+        show = true;
+      } else if (filter === 'Bebidas') {
+        // Show all beverage subsections
+        show = BEBIDAS_SUBCATEGORIES.includes(cat) || cat === 'Bebidas';
+      } else {
+        show = cat === filter;
+      }
+
       section.style.display = show ? 'block' : 'none';
       if (show) {
         section.style.animation = 'none';
-        section.offsetHeight; // trigger reflow
+        section.offsetHeight;
         section.style.animation = `fadeInSection 0.4s ease ${i * 0.05}s forwards`;
       }
     });
 
-    // Scroll to content if filtering a specific category
     if (filter !== 'all') {
-      const target = this.contentEl.querySelector(`.menu-category[data-category="${filter}"]`);
+      let target;
+      if (filter === 'Bebidas') {
+        target = this.contentEl.querySelector(`.menu-category[data-category="${BEBIDAS_SUBCATEGORIES[0]}"]`);
+      } else {
+        target = this.contentEl.querySelector(`.menu-category[data-category="${filter}"]`);
+      }
       if (target) {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
@@ -781,10 +765,19 @@ class MenuRenderer {
       grouped[p.categoria].push(p);
     });
 
-    // Render each category in order
-    this.categories.forEach((cat, index) => {
-      if (!grouped[cat] || grouped[cat].length === 0) return;
+    // Build render order: regular categories + beverage subcategories at the end
+    const renderOrder = [];
+    this.displayCategories.forEach(cat => {
+      if (cat === 'Bebidas') {
+        BEBIDAS_SUBCATEGORIES.forEach(sub => {
+          if (grouped[sub] && grouped[sub].length > 0) renderOrder.push(sub);
+        });
+      } else {
+        if (grouped[cat] && grouped[cat].length > 0) renderOrder.push(cat);
+      }
+    });
 
+    renderOrder.forEach((cat, index) => {
       const section = document.createElement('section');
       section.className = 'menu-category visible';
       section.dataset.category = cat;
@@ -793,12 +786,17 @@ class MenuRenderer {
       const icon = CATEGORY_ICONS[cat] || '🍽️';
       const count = grouped[cat].length;
 
+      // For beverage subcategories, show a subsection label
+      const isBeverageSub = BEBIDAS_SUBCATEGORIES.includes(cat);
+      const subLabel = BEBIDAS_SUBLABELS[cat] || cat;
+      const displayTitle = isBeverageSub ? `Bebidas — ${subLabel}` : cat;
+
       section.innerHTML = `
-        <div class="menu-category__header">
+        <div class="menu-category__header${isBeverageSub ? ' menu-category__header--sub' : ''}">
           <div class="menu-category__icon">${icon}</div>
           <div>
-            <h2 class="menu-category__title">${cat}</h2>
-            <span class="menu-category__count">${count} ${count === 1 ? 'plato' : 'platos'}</span>
+            <h2 class="menu-category__title">${displayTitle}</h2>
+            <span class="menu-category__count">${count} ${count === 1 ? 'opción' : 'opciones'}</span>
           </div>
         </div>
       `;
@@ -834,7 +832,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const renderer = new MenuRenderer(content, tabs);
   renderer.loadProducts();
 
-  // Mobile menu toggle (simple redirect for now)
   const mobileBtn = document.getElementById('mobileMenuToggle');
   if (mobileBtn) {
     mobileBtn.addEventListener('click', () => {
