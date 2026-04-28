@@ -1,0 +1,282 @@
+{
+  "name": "Tronquitos AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        1904,
+        32
+      ],
+      "id": "3d2f95b1-29a5-4358-a785-5b9827f42c59",
+      "name": "When chat message received",
+      "webhookId": "7ac612a6-5efa-4589-a2fe-e6a76778ce5e"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2128,
+        256
+      ],
+      "id": "e2ea6f95-50e4-46df-a2e7-b9d9573440b6",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "G1ZMBDtOoK4Afivh",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Eres el asistente virtual de Los Tronquitos (tronquitos.co), un asadero gourmet con más de 55 años de tradición en carne a la llanera en Bogotá, Colombia.\n\nTu personalidad:\n- Eres cálido, amable y profesional, como un buen anfitrión colombiano\n- Hablas en español colombiano natural\n- Usas emojis ocasionalmente para dar calidez (🔥🥩🌳)\n- Eres conversacional pero eficiente\n- Tratas a cada cliente como si fuera especial\n\nTus capacidades:\n\n1. RESERVAS: Usa la herramienta \"Create Reservation\" para crear reservas. Recopila paso a paso:\n   - Nombre completo (obligatorio)\n   - Teléfono (obligatorio)\n   - Email (opcional, puede ser vacío)\n   - Fecha en formato YYYY-MM-DD (obligatorio)\n   - Hora en formato HH:MM 24h (obligatorio, ej: 14:00)\n   - Número de personas (obligatorio, número entero)\n   - Sede preferida (obligatorio)\n   - Notas especiales (opcional)\n\n2. CONTACTO: Usa \"Create Contact\" para guardar mensajes. Necesitas:\n   - Nombre, Teléfono, Email y Mensaje\n\n3. MENÚ: Usa \"Get Menu\" para consultar platos y precios actualizados.\n\n4. HORARIOS: Usa \"Check Schedule\" para consultar horarios de una sede.\n\n5. DISPONIBILIDAD: Usa \"Check Availability\" para verificar cupos antes de reservar.\n\nSedes disponibles:\n- Principal (Av. Calle 3 #53-07)\n- Terraza (Tv 42 #3-08)\n- Restrepo (Cl 15 Sur #22-20)\n- Nieves (Cra 7 #19-74)\n- 7ma con 22 (Cra 7 #22-12)\n- Av Rojas (Av. Rojas #3-08)\n\nReglas:\n- SIEMPRE confirma TODOS los datos con el cliente ANTES de crear la reserva o contacto\n- Pregunta los datos de forma conversacional, no pidas todo de golpe\n- Si no especifica sede, pregunta cuál prefiere mencionando las opciones\n- Para grupos de más de 30 personas, menciona que es evento especial\n- Horario general: 11:30 AM - 6:00 PM (varía por sede, consulta si necesitas)\n- Si algo falla al crear la reserva, disculpa amablemente y sugiere llamar al 312 792 3219\n- Responde SIEMPRE en español\n- Cuando consultes el menú, presenta los platos de forma atractiva con precios formateados (ej: $25.000)\n- Antes de crear una reserva, verifica disponibilidad con la herramienta correspondiente",
+          "maxIterations": 15,
+          "returnIntermediateSteps": false
+        }
+      },
+      "id": "2507700a-ce54-4c4f-af3b-04b27ee60957",
+      "name": "Restaurant Assistant1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2440,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        2256,
+        256
+      ],
+      "id": "907b34cd-8309-4657-a451-5a50227b45fb",
+      "name": "Postgres Chat Memory1",
+      "credentials": {
+        "postgres": {
+          "id": "xDoCen1bPn2bPlvX",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://tronquitos.co/api/reservation",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ \"Nombre\": $fromAI(\"customer_name\", \"Nombre completo del cliente\", \"string\"), \"Teléfono\": $fromAI(\"phone\", \"Número de teléfono del cliente con código de país\", \"string\"), \"Email\": $fromAI(\"email\", \"Email del cliente o cadena vacía si no lo proporcionó\", \"string\"), \"Personas\": Number($fromAI(\"guests\", \"Número de personas como entero\", \"number\")), \"Fecha\": $fromAI(\"date\", \"Fecha de la reserva en formato YYYY-MM-DD\", \"string\"), \"Hora\": $fromAI(\"time\", \"Hora de la reserva en formato HH:MM 24 horas\", \"string\"), \"Sede\": $fromAI(\"sede\", \"Nombre de la sede: Principal, Terraza, Restrepo, Nieves, 7ma con 22, o Av Rojas\", \"string\"), \"Mensaje\": $fromAI(\"message\", \"Solicitudes especiales o notas, cadena vacía si no hay\", \"string\") }) }}",
+        "options": {}
+      },
+      "id": "5932c150-52a8-44b5-aa42-3dc1926fc287",
+      "name": "Create Reservation",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        2384,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://tronquitos.co/api/contacts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ \"Nombre\": $fromAI(\"contact_name\", \"Nombre completo del contacto\", \"string\"), \"Teléfono\": $fromAI(\"contact_phone\", \"Teléfono del contacto\", \"string\"), \"Email\": $fromAI(\"contact_email\", \"Email del contacto\", \"string\"), \"Mensaje\": $fromAI(\"contact_message\", \"Mensaje o consulta del cliente\", \"string\") }) }}",
+        "options": {}
+      },
+      "id": "74745576-3152-43bf-adeb-e74bf660e5f0",
+      "name": "Create Contact",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        2512,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://tronquitos.co/api/products?disponible=true",
+        "options": {}
+      },
+      "id": "f3711e63-b6a5-46c8-986a-6e5d7358cb09",
+      "name": "Get Menu",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        2640,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ \"https://tronquitos.co/api/schedule?sede=\" + encodeURIComponent($fromAI(\"schedule_sede\", \"Nombre de la sede para consultar horarios: Principal, Terraza, Restrepo, Nieves, 7ma con 22, o Av Rojas\", \"string\")) }}",
+        "options": {}
+      },
+      "id": "de6d9edb-7dca-4724-8409-ce191b8bbac5",
+      "name": "Check Schedule",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        2768,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ \"https://tronquitos.co/api/availability?sede=\" + encodeURIComponent($fromAI(\"avail_sede\", \"Nombre de la sede\", \"string\")) + \"&fecha=\" + $fromAI(\"avail_date\", \"Fecha en formato YYYY-MM-DD\", \"string\") }}",
+        "options": {}
+      },
+      "id": "4a12a2ad-c2ab-4cbf-a71f-6bf527907364",
+      "name": "Check Availability",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        2896,
+        256
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Restaurant Assistant1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Restaurant Assistant1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Restaurant Assistant1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Reservation": {
+      "ai_tool": [
+        [
+          {
+            "node": "Restaurant Assistant1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Contact": {
+      "ai_tool": [
+        [
+          {
+            "node": "Restaurant Assistant1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Menu": {
+      "ai_tool": [
+        [
+          {
+            "node": "Restaurant Assistant1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Schedule": {
+      "ai_tool": [
+        [
+          {
+            "node": "Restaurant Assistant1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Availability": {
+      "ai_tool": [
+        [
+          {
+            "node": "Restaurant Assistant1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9042d9c2-ab3a-4a74-923f-ed8b5a73e2a9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fb05fbeedd5c9b2c55100b8d6dbf48feb7a03382af850d22974e3e3969feca1b"
+  },
+  "id": "jzmU27Zrul1X5sjs",
+  "tags": []
+}
