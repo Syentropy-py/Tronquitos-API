@@ -392,7 +392,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Validate future date
         if (field.type === 'date' && input.value) {
-          const selectedDate = new Date(input.value);
+          // Parse as local date (not UTC) to avoid timezone mismatch
+          const parts = input.value.split('-');
+          const selectedDate = new Date(parts[0], parts[1] - 1, parts[2]);
+          selectedDate.setHours(0, 0, 0, 0);
           const today = new Date();
           today.setHours(0, 0, 0, 0);
           if (selectedDate < today) {
