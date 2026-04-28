@@ -447,11 +447,11 @@ def create_reservation():
                 }), 400
 
             # ── VALIDACIÓN: Mínimo 1 hora de anticipación ──
-            now_utc = datetime.now(dt.timezone.utc)
-            now_colombia = now_utc - timedelta(hours=5)
-            now_colombia = now_colombia.replace(tzinfo=None)
+            COLOMBIA_TZ = dt.timezone(timedelta(hours=-5))
+            now_colombia = datetime.now(COLOMBIA_TZ).replace(tzinfo=None)
             
             res_datetime = datetime.strptime(f"{fecha} {hora_normalized}", "%Y-%m-%d %H:%M")
+            logger.info(f"[DEBUG-TZ] now_colombia={now_colombia}, res_datetime={res_datetime}, diff={(res_datetime - now_colombia)}")
             if res_datetime < now_colombia + timedelta(hours=1):
                 return jsonify({
                     "status": "error",
