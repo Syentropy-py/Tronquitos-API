@@ -68,7 +68,10 @@ class ReservationService:
         # Validar que la fecha/hora sea futura
         try:
             reservation_datetime = datetime.strptime(f"{fecha} {hora}", "%Y-%m-%d %H:%M")
-            if reservation_datetime < datetime.now():
+            import datetime as _dt
+            COLOMBIA_TZ = _dt.timezone(timedelta(hours=-5))
+            now_colombia = datetime.now(COLOMBIA_TZ).replace(tzinfo=None)
+            if reservation_datetime < now_colombia:
                 return {
                     'success': False,
                     'message': 'No se puede crear una reserva en el pasado'
